@@ -3,8 +3,7 @@ package web
 import (
     "prflr.org/config"
     "prflr.org/db"
-    "prflr.org/timerstruct"
-    "prflr.org/statstruct"
+    "prflr.org/structures"
     "labix.org/v2/mgo/bson"
 	"encoding/json"
 	"fmt"
@@ -48,7 +47,7 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
-    http.Redirect(w, r, "/", 200)
+    http.Redirect(w, r, "/", 301)
 }
 
 func lastHandler(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +70,7 @@ func lastHandler(w http.ResponseWriter, r *http.Request) {
     dbc     := db.C(config.DBTimers)
 
 	// Query All
-	var results []timerstruct.Timer
+	var results []structures.Timer
 
 	//TODO add criteria builder
 	err := dbc.Find(makeCriteria(r.FormValue("filter"))).Sort("-_id").Limit(100).All(&results)
@@ -110,7 +109,7 @@ func aggregateHandler(w http.ResponseWriter, r *http.Request) {
     dbc     := db.C(config.DBTimers)
 
 	// Query All
-	var results []statstruct.Stat
+	var results []structures.Stat
 
 	grouplist  := make(map[string]interface{})
 	groupparam := make(map[string]interface{})

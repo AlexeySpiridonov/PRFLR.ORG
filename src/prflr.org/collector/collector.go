@@ -2,7 +2,7 @@ package collector
 
 import (
     "prflr.org/config"
-    "prflr.org/timerstruct"
+    "prflr.org/structures"
     "prflr.org/db"
     "labix.org/v2/mgo"
 	"log"
@@ -47,7 +47,7 @@ func saveMessage(dbc *mgo.Collection, msg string) {
 	}
 }
 
-func prepareMessage(msg string) (timer timerstruct.Timer) {
+func prepareMessage(msg string) (timer structures.Timer) {
 	fields := strings.Split(msg, "|")
 
 	time, err := strconv.ParseFloat(fields[3], 32)
@@ -55,8 +55,8 @@ func prepareMessage(msg string) (timer timerstruct.Timer) {
 		log.Panic(err)
 	}
 
-	//return timerstruct.Timer{fields[0][0:16], fields[1][0:16], fields[2][0:48], float32(time), fields[4][0:16]}
+	//return structures.Timer{fields[0][0:16], fields[1][0:16], fields[2][0:48], float32(time), fields[4][0:16]}
 	//TODO add check for apikey and crop for fields lenght
-	return timerstruct.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}
+	return structures.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}
 }
 
