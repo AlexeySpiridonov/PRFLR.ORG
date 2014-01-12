@@ -10,12 +10,12 @@
     <body>
         <div>
             <div class="userPanel">
-                <div class="userPanelName">Andrey Eshu-kun</div>
-                <div class="userPanelLogout"><a href="/logout" onClick="return Logout();">Logout</a>&nbsp;</div>
+                <span class="userPanelName"><a href="#profile" onClick="clickMenuItem('#settings');return false;">{{.Name}}</a></span>
+                (<span class="userPanelLogout"><a href="/logout" onClick="return Logout();">Logout</a>&nbsp;</span>)
             </div>
             <table>
                 <td width="250">
-                    <img src="/assets/prflr.gif" width="250" style="padding:0 0px 0 5px;"/>
+                    <img src="/assets/prflr.gif" style="padding-left: 32px"/>
                 </td>
                 <td>
                     <div id="tab_menu">
@@ -135,14 +135,11 @@
                 <!-- SETTINGS -->
                 <div id="settings" class="profiler_block">
                     <h1>Settings</h1>
-                    in near future :) </br>
-                    </br>
-                    </br>
-                    Your Name </br>
-                    Email </br>
-                    Password </br>
-                    ApiKey (reset)</br>
-                    Plan: Medium (45% quota exceed)  [our others plans]</br>
+                    <b>Your Name</b> {{.Name}}</br>
+                    <b>Email</b> {{.Email}} </br>
+                    <b>Password</b> {{.Password}} (<a href="#changePassword" onClick="return changePassword();">change</a>)</br>
+                    <b>ApiKey</b> {{.ApiKey}} (<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)</br>
+                    <b>Plan</b> Medium (45% quota exceed)  [<a href="#plans" onClick="return false;">our others plans</a>]</br>
 
                 </div> <!-- END OF settings -->
 
@@ -159,9 +156,10 @@
             <a href="http://prflr.org/#">Community</a>
             <br/><br/>
             &copy; <a href="http://prflr.org">PRFLR TEAM</a> 2013,  A.Evsyukov, A.Spiridonov
-            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br/><br/>
+            <!--<br/><br/><br/><br/><br/><br/><br/><br/><br/>
             <img src="/assets/fuckyeah.jpg">
-            <br/><br/><br/>
+            <br/><br/><br/>-->
         </center>
          <script type="text/javascript">
             var inProgress    = false;

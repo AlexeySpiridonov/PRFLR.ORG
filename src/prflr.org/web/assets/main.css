@@ -1,7 +1,36 @@
+body {font-family: Times New Roman;}
+
+div.auth {font-style: Italic; font-size: 1.1em; width: 1000px;margin: 0 auto}
+
+.spacer {height: 100px}
+
+.landing_blocks div {
+    float: left;
+    width: 287px;
+    height: 287px;
+    box-shadow: 5px 5px 5px #888888;
+    overflow: auto;
+    font-size: 0.9em;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.landing_block1 {margin-right: 45px; text-align: left}
+.landing_block2 {margin-right: 46px; text-align: justify;}
+.landing_block3 {text-align: left;}
+
+#loginForm input.text {font-size: 1em;padding:3px; width: 255px}
+
+::-webkit-input-placeholder
+{
+    color: #ccc;
+}
+
 /*tr.prflrRow:hover {background-color: #fef; cursor: pointer;}*/
 .b1 td {border-bottom:1px solid #808080;}
 
 .profiler_block {display: none;padding-bottom:50px}
+.profiler_block b {display: block;float: left;width: 100px;}
 .refresh_button {margin-left: 10px;}
 
 #tab_menu  a {text-decoration: none; color: #000000;font-size:35px; padding-top:35px;}

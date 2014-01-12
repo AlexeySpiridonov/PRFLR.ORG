@@ -1,6 +1,6 @@
 function start(){ 
 	$.ajaxSetup({cache: false}); // turn off ajax cache
-	
+
 	// Menu Item Handlers
 	$('#tab_menu a').click(function(){
 	    if (inProgress) {
@@ -12,21 +12,21 @@ function start(){
 	    var selector = $(this).attr('href');
 	    $(selector).show();
 
-		var filter = $('.profiler_block:visible').find('input[name=filter]').val();
-	    filter     = typeof(filter) != 'undefined' && filter.length > 0 ? filter : '*/*/*/*';
+		var filter    = $('.profiler_block:visible').find('input[name=filter]').val();
+	    var filterVal = typeof(filter) != 'undefined' && filter.length > 0 ? filter : '*/*/*/*';
 
-	    $(selector).find('input[name=filter]').val(filter);
-	    $(selector+' :input').not('input[name="filter"]').change(function(e){
-	        renderDataGrid(selector);
-	    });
-	    $(selector+' .refresh_button').click(function(){
-	        renderDataGrid(selector);
-	    });
+        $(selector).find('input[name=filter]').val(filterVal);
+        $(selector+' :input').not('input[name="filter"]').change(function(e){
+            renderDataGrid(selector);
+        });
+        $(selector+' .refresh_button').click(function(){
+            renderDataGrid(selector);
+        });
 
-	    $('#tab_menu a').removeClass('tabselected');
-	    $(this).addClass('tabselected');
+        $('#tab_menu a').removeClass('tabselected');
+        $(this).addClass('tabselected');
 
-		renderDataGrid(selector, false);
+        renderDataGrid(selector, false);
 
 	    return false;
 	});
@@ -36,12 +36,12 @@ function start(){
 	if (hash.length > 0) {
 		hash = hash.split("|");
 
-		if (typeof(hash[1]) == 'undefined') {
-			hash[1] = 'aggregate';
+		if (typeof(hash[0]) == 'undefined') {
+			hash[0] = 'aggregate';
 		}
 
-		$('input[name=filter]').val(hash[0]);
-	    $('#tab_menu a[href="#'+hash[1]+'"]').click();
+		$('input[name=filter]').val(hash[1]);
+	    $('#tab_menu a[href="#'+hash[0]+'"]').click();
 	} else {
 	    $('#tab_menu a[href="#aggregate"]').click();
 	}
@@ -55,6 +55,12 @@ function start(){
 		assignFilterChunkValue('*', '*');
 		renderDataGrid(getCurrentMenuSelector());
 	});
+}
+
+function clickMenuItem(item)
+{
+    item = item.replace("#", "");
+    $('#tab_menu a[href=#'+item+']').click();
 }
 
 // Row items click handlers
@@ -131,7 +137,9 @@ function renderDataGrid(selector, checkEmpty)
     var query  = "/" + elem.attr('id') + "/?" + elem.find(':input').serialize();
 
 	var filter = $('input[name=filter]:visible').val();
-	window.location.hash = "#"+filter+"|"+getCurrentMenuSelector().replace("#", '');
+    filter     = typeof(filter) != 'undefined' && filter.length > 0 ? filter : '*/*/*/*';
+	//window.location.hash = "#"+filter+"|"+getCurrentMenuSelector().replace("#", '');
+    window.location.hash = "#"+getCurrentMenuSelector().replace("#", '')+"|"+filter;
 
     if (grid.length == 0) {
         return false;
@@ -214,6 +222,18 @@ function renderDataGrid(selector, checkEmpty)
     });
 }
 
-function Logout() {
+function Logout()
+{
     return confirm('Are you sure you want to Logout?');
+}
+
+function resetApiKey()
+{
+    return confirm('Are you sure you want to RESET your Api Key?');
+}
+
+function changePassword()
+{
+    var password = prompt('Insert your new password');
+    return false;
 }

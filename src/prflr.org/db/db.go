@@ -2,7 +2,6 @@ package db
 
 import(
     "prflr.org/config"
-    "prflr.org/structures"
     "labix.org/v2/mgo"
     "log"
 )
@@ -22,7 +21,7 @@ func GetConnection() (*mgo.Session) {
     return db.Clone()
 }
 
-func Init() {
+/*func Init() {
     //db := GetConnection(config.DBName)
     session := GetConnection()
     db      := session.DB(config.DBName)
@@ -37,10 +36,10 @@ func Init() {
 	dbc.Create(&mgo.CollectionInfo{Capped: true, MaxBytes: config.CappedCollectionMaxByte, MaxDocs: config.CappedCollectionMaxDocs})
 
 	// Insert Test Datas
-	err = dbc.Insert(&structures.Timer{Thrd: "1234567890", Timer: "prflr.check69", Src: "test.src69", Time: 1, Info: "test data 69", Apikey: "PRFLRApiKey69"})
+	err = dbc.Insert(&timer.Timer{Thrd: "1234567890", Timer: "prflr.check69", Src: "test.src69", Time: 1, Info: "test data 69", Apikey: "PRFLRApiKey69"})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	session.Close()
-}
+}*/

@@ -2,10 +2,13 @@ package web
 
 import (
     "prflr.org/config"
-    "prflr.org/db"
-    "prflr.org/structures"
+    "prflr.org/user"
+    "prflr.org/timer"
+    "prflr.org/stringHelper"
+    "prflr.org/urlHelper"
     "labix.org/v2/mgo/bson"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -20,7 +23,8 @@ func Start() {
     http.HandleFunc("/last/", lastHandler)
     http.HandleFunc("/aggregate/", aggregateHandler)
     http.HandleFunc("/register/", registerHandler)
-    http.HandleFunc("/auth/", authHandler)
+    http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
+    http.HandleFunc("/resetApiKey/", resetApiKeyHandler)
     http.HandleFunc("/logout/", logoutHandler)
     http.HandleFunc("/", mainHandler)
 
@@ -29,11 +33,38 @@ func Start() {
 
 /* HTTP Handlers */
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles(config.BaseDir + "web/assets/main.html")
-	if err != nil {
-	    log.Fatal(err)
+	user := &user.User{}
+	if err := user.GetCurrentUser(r); err != nil {
+	    // check for Auth Form Submit
+	    email := r.FormValue("email")
+	    pass  := r.FormValue("password")
+
+        // auth successful?..
+        loginErr := auth(email, pass, w)
+	    if loginErr == nil {
+	        //log.Print("No error! Redirect!")
+            http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
+	    }
+
+	    // ok, no user then show Auth Page
+	    t, err := template.ParseFiles(config.BaseDir + "web/assets/auth.html")
+	    if err != nil {
+            log.Fatal(err)
+        }
+
+        tplVars := make(map[string]interface{})
+        tplVars["loginErr"] = loginErr
+
+        t.Execute(w, tplVars)
+	} else {
+	    // we have user!
+	    // let's show Web Panel for this user
+	    t, err := template.ParseFiles(config.BaseDir + "web/assets/main.html")
+    	if err != nil {
+    	    log.Fatal(err)
+    	}
+    	t.Execute(w, user)
 	}
-	t.Execute(w, nil)
 }
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,39 +72,49 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
-func authHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles(config.BaseDir + "web/assets/auth.html")
+func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
 	t.Execute(w, nil)
 }
 
+func resetApiKeyHandler(w http.ResponseWriter, r *http.Request) {
+    user := &user.User{}
+
+    user.GetCurrentUser(r)
+
+    if len(user.ApiKey) > 0 {
+        oldApiKey := user.ApiKey
+
+        // Changing User's ApiKey and Cookies
+        if err := user.SetApiKey(stringHelper.RandomString(128), w); err != nil {
+            log.Print(err)
+        }
+
+        // Updating existing Timers with new ApiKey in order to not lose it!
+        timer.SetApiKey(oldApiKey, user.ApiKey)
+    }
+
+    // @TODO: make a urlHelper for generating URLs !!!
+    http.Redirect(w, r, urlHelper.GenerateUrl("#settings"), http.StatusFound)
+}
+
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
-    http.Redirect(w, r, "/", 301)
+    user := &user.User{}
+
+    user.GetCurrentUser(r)
+    user.Logout(w)
+
+    http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
 }
 
 func lastHandler(w http.ResponseWriter, r *http.Request) {
-	/*
+    user := &user.User{}
+    user.GetCurrentUser(r)
 
-	db, err := mgo.Dial(dbHosts)
-	if err != nil {
-		log.Panic(err)
-	}
-	defer db.Close()
+	criteria := makeCriteria(r.FormValue("filter"))
+	criteria["apikey"] = user.ApiKey
 
-	db.SetMode(mgo.Monotonic, true)
-	dbc := db.DB(dbName).C(dbTimers)
-
-	*/
-
-
-	session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBTimers)
-
-	// Query All
-	var results []structures.Timer
-
-	//TODO add criteria builder
-	err := dbc.Find(makeCriteria(r.FormValue("filter"))).Sort("-_id").Limit(100).All(&results)
+	results, err := timer.GetList(criteria);
 	if err != nil {
 		log.Panic(err)
 	}
@@ -83,76 +124,43 @@ func lastHandler(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 	fmt.Fprintf(w, "%s", j)
-
-    // @TODO
-	session.Close()
 }
 
 func aggregateHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO
-	/*
+    user := &user.User{}
+    user.GetCurrentUser(r)
 
-	db, err := mgo.Dial(dbHosts)
-	if err != nil {
-		log.Panic(err)
-	}
-	defer db.Close()
+    // aggregate query parameters
+    groupBy  := make(map[string]interface{})
+    sortBy   := r.FormValue("sortby")
 
-	db.SetMode(mgo.Monotonic, true)
-	dbc := db.DB(dbName).C(dbTimers)
+    // define criteria for current user
+    criteria := makeCriteria(r.FormValue("filter"))
+    criteria["apikey"] = user.ApiKey
 
-	*/
+    // filling in GroupBy parameter
+    q := strings.Split(r.FormValue("groupby"), ",")
+    if len(q) >= 1 && q[0] == "src" {
+        groupBy["src"] = 1
+    }
+    if len(q) >= 2 && q[1] == "timer" {
+        groupBy["timer"] = 1
+    }
 
+    results, err := timer.Aggregate(criteria, groupBy, sortBy)
+    if err != nil {
+        log.Panic(err)
+    }
 
-	session := db.GetConnection()
-	db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBTimers)
+    j, err := json.Marshal(results)
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	// Query All
-	var results []structures.Stat
-
-	grouplist  := make(map[string]interface{})
-	groupparam := make(map[string]interface{})
-
-	grouplist["count"] = bson.M{"$sum": 1}
-	grouplist["total"] = bson.M{"$sum": "$time"}
-	grouplist["min"] = bson.M{"$min": "$time"}
-	grouplist["avg"] = bson.M{"$avg": "$time"}
-	grouplist["max"] = bson.M{"$max": "$time"}
-
-	q := strings.Split(r.FormValue("groupby"), ",")
-
-	if len(q) >= 1 && q[0] == "src" {
-		groupparam["src"] = "$src"
-		grouplist["src"] = bson.M{"$first": "$src"}
-	}
-	if len(q) >= 2 && q[1] == "timer" {
-		grouplist["timer"] = bson.M{"$first": "$timer"}
-		groupparam["timer"] = "$timer"
-	}
-	grouplist["_id"] = groupparam
-	group := bson.M{"$group": grouplist}
-	sort  := bson.M{"$sort": bson.M{r.FormValue("sortby"): -1}}
-	match := bson.M{"$match": makeCriteria(r.FormValue("filter"))}
-	aggregate := []bson.M{match, group, sort}
-
-	err := dbc.Pipe(aggregate).All(&results)
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	j, err := json.Marshal(results)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Fprintf(w, "%s", j)
-
-	// @TODO
-    session.Close()
+    fmt.Fprintf(w, "%s", j)
 }
 
-func makeCriteria(filter string) interface{} {
+func makeCriteria(filter string) map[string]interface{} {
 	q := strings.Split(filter, "/")
 	c := make(map[string]interface{})
 
@@ -169,4 +177,13 @@ func makeCriteria(filter string) interface{} {
 		c["thrd"] = q[3]
 	}
 	return c
+}
+
+func auth(email, password string, w http.ResponseWriter) error {
+    if len(email) == 0 || len(password) == 0 {
+        return errors.New("")
+    }
+
+    user := &user.User{}
+    return user.Auth(email, password, w)
 }
