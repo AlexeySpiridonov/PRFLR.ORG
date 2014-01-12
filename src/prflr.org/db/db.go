@@ -26,20 +26,20 @@ func GetConnection() (*mgo.Session) {
     session := GetConnection()
     db      := session.DB(config.DBName)
 
-	err := db.DropDatabase()
-	if err != nil {
-		log.Fatal(err)
-	}
-	dbc := db.C(config.DBTimers)
+    err := db.DropDatabase()
+    if err != nil {
+        log.Fatal(err)
+    }
+    dbc := db.C(config.DBTimers)
 
-	// creating capped collection
-	dbc.Create(&mgo.CollectionInfo{Capped: true, MaxBytes: config.CappedCollectionMaxByte, MaxDocs: config.CappedCollectionMaxDocs})
+    // creating capped collection
+    dbc.Create(&mgo.CollectionInfo{Capped: true, MaxBytes: config.CappedCollectionMaxByte, MaxDocs: config.CappedCollectionMaxDocs})
 
-	// Insert Test Datas
-	err = dbc.Insert(&timer.Timer{Thrd: "1234567890", Timer: "prflr.check69", Src: "test.src69", Time: 1, Info: "test data 69", Apikey: "PRFLRApiKey69"})
-	if err != nil {
-		log.Fatal(err)
-	}
+    // Insert Test Datas
+    err = dbc.Insert(&timer.Timer{Thrd: "1234567890", Timer: "prflr.check69", Src: "test.src69", Time: 1, Info: "test data 69", Apikey: "PRFLRApiKey69"})
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	session.Close()
+    session.Close()
 }*/

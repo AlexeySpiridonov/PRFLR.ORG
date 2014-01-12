@@ -10,25 +10,25 @@ import(
  * UDP Package struct
  */
 type Timer struct {
-	Thrd   string
-	Src    string
-	Timer  string
-	Time   float32
-	Info   string
-	Apikey string
+    Thrd   string
+    Src    string
+    Timer  string
+    Time   float32
+    Info   string
+    Apikey string
 }
 
 /**
  * Web panel Struct
  */
 type Stat struct {
-	Src   string
-	Timer string
-	Count int
-	Total float32
-	Min   float32
-	Avg   float32
-	Max   float32
+    Src   string
+    Timer string
+    Count int
+    Total float32
+    Min   float32
+    Avg   float32
+    Max   float32
 }
 
 func GetList(query interface{}) (*[]Timer, error) {
@@ -51,7 +51,7 @@ func GetList(query interface{}) (*[]Timer, error) {
 func Aggregate(criteria interface{}, groupBy map[string]interface{}, sortBy string) (*[]Stat, error) {
     // @TODO: add validation and Error Handling
     session := db.GetConnection()
-	db      := session.DB(config.DBName)
+    db      := session.DB(config.DBName)
     dbc     := db.C(config.DBTimers)
 
     var results []Stat

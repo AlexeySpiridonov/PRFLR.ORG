@@ -15,12 +15,12 @@ import(
  * User struct
  */
 type User struct {
-	Email    string
-	Password string
-	ApiKey   string
-	Token    float32
-	Name     string
-	Info     string
+    Email    string
+    Password string
+    ApiKey   string
+    Token    float32
+    Name     string
+    Info     string
 }
 
 func (user *User) GetUser(email string, password string) error {

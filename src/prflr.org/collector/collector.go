@@ -3,26 +3,26 @@ package collector
 import (
     "prflr.org/config"
     "prflr.org/timer"
-	"log"
-	"net"
-	"strconv"
+    "log"
+    "net"
+    "strconv"
     "strings"
 )
 
 /* Starting UDP Server */
 func Start() {
-	// @TODO: add here UDP aggregator  in  different thread
-	laddr, err := net.ResolveUDPAddr("udp", config.UDPPort)
-	if err != nil {
-		log.Fatal(err)
-	}
+    // @TODO: add here UDP aggregator  in  different thread
+    laddr, err := net.ResolveUDPAddr("udp", config.UDPPort)
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	l, err := net.ListenUDP("udp", laddr)
-	if err != nil {
-		log.Fatal(err)
-	}
+    l, err := net.ListenUDP("udp", laddr)
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	// is Buffer enough?!?!
+    // is Buffer enough?!?!
     var buffer [500]byte
     for {
         n, _, err := l.ReadFromUDP(buffer[0:])
@@ -43,14 +43,13 @@ func saveMessage(msg string) {
 }
 
 func parseStringToTimer(msg string) timer.Timer {
-	fields := strings.Split(msg, "|")
+    fields := strings.Split(msg, "|")
 
-	time, err := strconv.ParseFloat(fields[3], 32)
-	if err != nil {
-		log.Panic(err)
-	}
+    time, err := strconv.ParseFloat(fields[3], 32)
+    if err != nil {
+        log.Panic(err)
+    }
 
-	//TODO add check for apikey and crop for fields lenght
-	return timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}
+    //TODO add check for apikey and crop for fields lenght
+    return timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}
 }
-

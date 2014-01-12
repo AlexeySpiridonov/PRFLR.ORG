@@ -7,13 +7,13 @@ import (
     "prflr.org/stringHelper"
     "prflr.org/urlHelper"
     "labix.org/v2/mgo/bson"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"html/template"
-	"net/http"
-	"log"
-	"strings"
+    "encoding/json"
+    "html/template"
+    "net/http"
+    "errors"
+    "fmt"   
+    "log"
+    "strings"
 )
 
 func Start() {
@@ -33,22 +33,22 @@ func Start() {
 
 /* HTTP Handlers */
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	user := &user.User{}
-	if err := user.GetCurrentUser(r); err != nil {
-	    // check for Auth Form Submit
-	    email := r.FormValue("email")
-	    pass  := r.FormValue("password")
+    user := &user.User{}
+    if err := user.GetCurrentUser(r); err != nil {
+        // check for Auth Form Submit
+        email := r.FormValue("email")
+        pass  := r.FormValue("password")
 
         // auth successful?..
         loginErr := auth(email, pass, w)
-	    if loginErr == nil {
-	        //log.Print("No error! Redirect!")
+        if loginErr == nil {
+            //log.Print("No error! Redirect!")
             http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
-	    }
+        }
 
-	    // ok, no user then show Auth Page
-	    t, err := template.ParseFiles(config.BaseDir + "web/assets/auth.html")
-	    if err != nil {
+        // ok, no user then show Auth Page
+        t, err := template.ParseFiles(config.BaseDir + "web/assets/auth.html")
+        if err != nil {
             log.Fatal(err)
         }
 
@@ -56,30 +56,29 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
         tplVars["loginErr"] = loginErr
 
         t.Execute(w, tplVars)
-	} else {
-	    // we have user!
-	    // let's show Web Panel for this user
-	    t, err := template.ParseFiles(config.BaseDir + "web/assets/main.html")
-    	if err != nil {
-    	    log.Fatal(err)
-    	}
-    	t.Execute(w, user)
-	}
+    } else {
+        // we have user!
+        // let's show Web Panel for this user
+        t, err := template.ParseFiles(config.BaseDir + "web/assets/main.html")
+        if err != nil {
+            log.Fatal(err)
+        }
+        t.Execute(w, user)
+    }
 }
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles(config.BaseDir + "web/assets/register.html")
-	t.Execute(w, nil)
+    t, _ := template.ParseFiles(config.BaseDir + "web/assets/register.html")
+    t.Execute(w, nil)
 }
 
 func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
-	t.Execute(w, nil)
+    t, _ := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
+    t.Execute(w, nil)
 }
 
 func resetApiKeyHandler(w http.ResponseWriter, r *http.Request) {
     user := &user.User{}
-
     user.GetCurrentUser(r)
 
     if len(user.ApiKey) > 0 {
@@ -111,19 +110,19 @@ func lastHandler(w http.ResponseWriter, r *http.Request) {
     user := &user.User{}
     user.GetCurrentUser(r)
 
-	criteria := makeCriteria(r.FormValue("filter"))
-	criteria["apikey"] = user.ApiKey
+    criteria := makeCriteria(r.FormValue("filter"))
+    criteria["apikey"] = user.ApiKey
 
-	results, err := timer.GetList(criteria);
-	if err != nil {
-		log.Panic(err)
-	}
+    results, err := timer.GetList(criteria);
+    if err != nil {
+      log.Panic(err)
+    }
 
-	j, err := json.Marshal(&results)
-	if err != nil {
-		log.Panic(err)
-	}
-	fmt.Fprintf(w, "%s", j)
+    j, err := json.Marshal(&results)
+    if err != nil {
+        log.Panic(err)
+    }
+    fmt.Fprintf(w, "%s", j)
 }
 
 func aggregateHandler(w http.ResponseWriter, r *http.Request) {
@@ -161,22 +160,22 @@ func aggregateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func makeCriteria(filter string) map[string]interface{} {
-	q := strings.Split(filter, "/")
-	c := make(map[string]interface{})
+    q := strings.Split(filter, "/")
+    c := make(map[string]interface{})
 
-	if len(q) >= 1 && q[0] != "" && q[0] != "*" {
-		c["src"] = &bson.RegEx{q[0], "i"}
-	}
-	if len(q) >= 2 && q[1] != "" && q[1] != "*" {
-		c["timer"] = &bson.RegEx{q[1], "i"}
-	}
-	if len(q) >= 3 && q[2] != "" && q[2] != "*" {
-		c["info"] = &bson.RegEx{q[2], "i"}
-	}
-	if len(q) >= 4 && q[3] != "" && q[3] != "*" {
-		c["thrd"] = q[3]
-	}
-	return c
+    if len(q) >= 1 && q[0] != "" && q[0] != "*" {
+        c["src"] = &bson.RegEx{q[0], "i"}
+    }
+    if len(q) >= 2 && q[1] != "" && q[1] != "*" {
+        c["timer"] = &bson.RegEx{q[1], "i"}
+    }
+    if len(q) >= 3 && q[2] != "" && q[2] != "*" {
+        c["info"] = &bson.RegEx{q[2], "i"}
+    }
+    if len(q) >= 4 && q[3] != "" && q[3] != "*" {
+        c["thrd"] = q[3]
+    }
+    return c
 }
 
 func auth(email, password string, w http.ResponseWriter) error {
