@@ -10,8 +10,8 @@
     <body>
         <div>
             <div class="userPanel">
-                <span class="userPanelName"><a href="#profile" onClick="clickMenuItem('#settings');return false;">{{.Name}}</a></span>
-                (<span class="userPanelLogout"><a href="/logout" onClick="return Logout();">Logout</a>&nbsp;</span>)
+                <div class="userPanelName">{{.Name}}</div>
+                <div class="userPanelLogout"><a href="/logout" onClick="return Logout();">Logout</a>&nbsp;</div>
             </div>
             <table>
                 <td width="250">
