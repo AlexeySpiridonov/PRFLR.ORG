@@ -17,5 +17,5 @@ const (
     HTTPPort                = ":8080"
 
     CappedCollectionMaxByte = 100000000 // 100Mb
-    CappedCollectionMaxDocs = 500000    // 500k
+    CappedCollectionMaxDocs = 2000000    // 2M timers   
 )
