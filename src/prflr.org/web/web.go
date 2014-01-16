@@ -77,13 +77,20 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 
     registerAttempt := r.PostFormValue("register")
 
-    var registerErr error
+    tplVars := make(map[string]interface{})
+    tplVars["name"]         = name
+    tplVars["email"]        = email
+    tplVars["pass"]         = pass
+    tplVars["confirm_pass"] = confirmPass
+    tplVars["info"]         = info
+
     if len(registerAttempt) > 0 {
         user, registerErr := register(name, email, pass, confirmPass, info)
         if registerErr == nil {
             sendRegistrationEmail(user)
             http.Redirect(w, r, urlHelper.GenerateUrl("/thankyou"), http.StatusFound)
         }
+        tplVars["registerErr"]  = registerErr
     }
 
     // ok, no user then show Auth Page
@@ -91,14 +98,6 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         log.Fatal(err)
     }
-
-    tplVars := make(map[string]interface{})
-    tplVars["registerErr"]  = registerErr
-    tplVars["name"]         = name
-    tplVars["email"]        = email
-    tplVars["pass"]         = pass
-    tplVars["confirm_pass"] = confirmPass
-    tplVars["info"]         = info
 
     t.Execute(w, tplVars)
 }
