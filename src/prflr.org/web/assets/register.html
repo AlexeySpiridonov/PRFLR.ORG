@@ -1,57 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script type="text/javascript" src="/assets/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="/assets/prflr.js"></script>
-    <link rel="stylesheet" type="text/css" href="/assets/main.css" />
-</head>
-<body>
-<div class="register">
-    <!-- HEADER -->
-    <table>
-        <td width="250">
-            <img src="/assets/prflr.gif" />
-        </td>
-        <td>
-            <br/><br/>
-            <div align="justify">Несмотря на внешнюю простоту проекта, в нем сконцентрированы годы работы над крупными сервисами, бессонные ночи в поиске проблемных мест, падающие сервера, "висящие" процессы, таинственные проблемы в коде и множество шишек набитых в попытках их найти. И нам верится, что этот опыт будет полезен другим в виде готового продукта.</div>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type="text/javascript" src="/assets/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="/assets/prflr.js"></script>
+        <link rel="stylesheet" type="text/css" href="/assets/main.css" />
+    </head>
+    <body>
+    <div class="register">
+        <!-- HEADER -->
+        <table>
+            <td width="250">
+                <img src="/assets/prflr.gif" />
+            </td>
+            <td>
+                <br/><br/>
+                <div align="justify">Несмотря на внешнюю простоту проекта, в нем сконцентрированы годы работы над крупными сервисами, бессонные ночи в поиске проблемных мест, падающие сервера, "висящие" процессы, таинственные проблемы в коде и множество шишек набитых в попытках их найти. И нам верится, что этот опыт будет полезен другим в виде готового продукта.</div>
+                <br/>
+                <div align="right"><b>PRFLR Team</b>: Алексей Спиридонов, Андрей Евсюков</div>
+            </td>
+        </table>
+
+        <!-- CONTENT -->
+        <br/><br clear="both" />
+        <h1>Register</h1>
+        <font color="red">{{.registerErr}}</font>
+        <form action="" method="POST" name="registerForm" id="registerForm" onsubmit="$('#submitButton').html('Please wait...').prop('disabled', true);" >
+            <input class="text" value="{{.name}}" type="text" name="name" autocomplete="off" placeholder="Your Full Name" /><br/><br/>
+            <input class="text" value="{{.email}}" type="text" name="email" autocomplete="off" placeholder="Email" /><br/><br/>
+            <input class="text" value="{{.pass}}" type="password" name="pass" autocomplete="off" placeholder="Password" /><br/>
+            <input class="text" value="{{.confirm_pass}}" type="password" name="confirm_pass" autocomplete="off" placeholder="Confirm Password" /><br/><br/>
+            <textarea placeholder="A few words about yourself" name="info" rows="5" cols="50">{{.info}}</textarea>
             <br/>
-            <div align="right"><b>PRFLR Team</b>: Алексей Спиридонов, Андрей Евсюков</div>
-        </td>
-    </table>
+            <input type="hidden" name="register" value="register" />
+            <button id="submitButton" type="submit">Submit</button>
+        </form>
+        <br clear="both" />
+    </div>
 
-    <!-- CONTENT -->
-    <br/><br clear="both" />
-    <h1>Register</h1>
-    <font color="red">{{.registerErr}}</font>
-    <form action="" method="POST" name="registerForm" id="registerForm" onsubmit="$('#submitButton').html('Please wait...').prop('disabled', true);" >
-        <input class="text" value="{{.name}}" type="text" name="name" autocomplete="off" placeholder="Your Full Name" /><br/><br/>
-        <input class="text" value="{{.email}}" type="text" name="email" autocomplete="off" placeholder="Email" /><br/><br/>
-        <input class="text" value="{{.pass}}" type="password" name="pass" autocomplete="off" placeholder="Password" /><br/>
-        <input class="text" value="{{.confirm_pass}}" type="password" name="confirm_pass" autocomplete="off" placeholder="Confirm Password" /><br/><br/>
-        <textarea placeholder="A few words about yourself" name="info" rows="5" cols="50">{{.info}}</textarea>
-        <br/>
-        <input type="hidden" name="register" value="register" />
-        <button id="submitButton" type="submit">Submit</button>
-    </form>
-    <br clear="both" />
-</div>
+    <br/>
 
-<br/>
-
-<!-- FOOTER -->
-<center>
-    <br/><br/><br/>
-    <a href="http://prflr.org/#">WTF is PRFLR</a> |
-    <a href="http://prflr.org/#">Docs</a> |
-    <a href="http://prflr.org/#">SDK Download</a> |
-    <a href="http://prflr.org/#">Clients</a> |
-    <a href="http://prflr.org/#">Community</a>
-    <br/><br/>
-    &copy; <a href="http://prflr.org">PRFLR TEAM</a> 2013,  A.Evsyukov, A.Spiridonov
-    <br/><br/>
-</center>
+    <!-- FOOTER -->
+    <center>
+        <br/><br/><br/>
+        <a href="https://github.com/PRFLR/SDK/blob/master/README.md">WTF is PRFLR</a> |
+        <a href="https://github.com/PRFLR/SDK">SDK Download</a> |
+        <a href="https://plus.google.com/u/1/communities/102923187187019370827">Community</a>
+        <br/><br/>
+        &copy; <a href="https://github.com/PRFLR?tab=members">PRFLR TEAM</a> 2013
+        <br/><br/>
+    </center>
 </body>
 </html>
