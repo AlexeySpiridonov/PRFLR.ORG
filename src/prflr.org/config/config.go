@@ -18,4 +18,8 @@ const (
 
     CappedCollectionMaxByte = 100000000 // 100Mb
     CappedCollectionMaxDocs = 500000    // 500k
+
+    RegisterEmailFrom       = "register@prflr.org"
+    RegisterEmailTo         = "info@prflr.org"
+    RegisterEmailSubject    = "New Account Registered!"
 )

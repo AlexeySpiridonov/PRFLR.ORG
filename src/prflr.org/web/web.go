@@ -4,7 +4,7 @@ import (
     "prflr.org/config"
     "prflr.org/user"
     "prflr.org/timer"
-    "prflr.org/stringHelper"
+    "prflr.org/mailer"
     "prflr.org/urlHelper"
     "labix.org/v2/mgo/bson"
     "encoding/json"
@@ -24,6 +24,7 @@ func Start() {
     http.HandleFunc("/aggregate/", aggregateHandler)
     http.HandleFunc("/register/", registerHandler)
     http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
+    http.HandleFunc("/thankyou/", thankyouHandler)
     http.HandleFunc("/resetApiKey/", resetApiKeyHandler)
     http.HandleFunc("/logout/", logoutHandler)
     http.HandleFunc("/", mainHandler)
@@ -36,13 +37,12 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
     user := &user.User{}
     if err := user.GetCurrentUser(r); err != nil {
         // check for Auth Form Submit
-        email := r.FormValue("email")
-        pass  := r.FormValue("password")
+        email := r.PostFormValue("email")
+        pass  := r.PostFormValue("password")
 
         // auth successful?..
         loginErr := auth(email, pass, w)
         if loginErr == nil {
-            //log.Print("No error! Redirect!")
             http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
         }
 
@@ -68,12 +68,48 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
-    t, _ := template.ParseFiles(config.BaseDir + "web/assets/register.html")
-    t.Execute(w, nil)
+    // check for Register Form Submit
+    name        := r.PostFormValue("name")
+    email       := r.PostFormValue("email")
+    pass        := r.PostFormValue("pass")
+    confirmPass := r.PostFormValue("confirm_pass")
+    info        := r.PostFormValue("info")
+
+    registerAttempt := r.PostFormValue("register")
+
+    var registerErr error
+    if len(registerAttempt) > 0 {
+        user, registerErr := register(name, email, pass, confirmPass, info)
+        if registerErr == nil {
+            sendRegistrationEmail(user)
+            http.Redirect(w, r, urlHelper.GenerateUrl("/thankyou"), http.StatusFound)
+        }
+    }
+
+    // ok, no user then show Auth Page
+    t, err := template.ParseFiles(config.BaseDir + "web/assets/register.html")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    tplVars := make(map[string]interface{})
+    tplVars["registerErr"]  = registerErr
+    tplVars["name"]         = name
+    tplVars["email"]        = email
+    tplVars["pass"]         = pass
+    tplVars["confirm_pass"] = confirmPass
+    tplVars["info"]         = info
+
+    t.Execute(w, tplVars)
 }
 
 func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
     t, _ := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
+    t.Execute(w, nil)
+}
+
+func thankyouHandler(w http.ResponseWriter, r *http.Request) {
+    t, _ := template.ParseFiles(config.BaseDir + "web/assets/thankyou.html")
     t.Execute(w, nil)
 }
 
@@ -82,15 +118,15 @@ func resetApiKeyHandler(w http.ResponseWriter, r *http.Request) {
     user.GetCurrentUser(r)
 
     if len(user.ApiKey) > 0 {
-        oldApiKey := user.ApiKey
+        //oldApiKey := user.ApiKey
 
         // Changing User's ApiKey and Cookies
-        if err := user.SetApiKey(stringHelper.RandomString(128), w); err != nil {
+        if err := user.SetApiKey(user.GenerateApiKey(), w); err != nil {
             log.Print(err)
         }
 
         // Updating existing Timers with new ApiKey in order to not lose it!
-        timer.SetApiKey(oldApiKey, user.ApiKey)
+        //timer.SetApiKey(oldApiKey, user.ApiKey)
     }
 
     // @TODO: make a urlHelper for generating URLs !!!
@@ -178,11 +214,60 @@ func makeCriteria(filter string) map[string]interface{} {
     return c
 }
 
+func register(name, email, pass, confirmPass, info string) (*user.User, error) {
+    if len(name) == 0 {
+        return nil, errors.New("Please specify your Full Name")
+    }
+    if len(email) == 0 {
+        return nil, errors.New("Please specify your Email address")
+    }
+    if len(pass) == 0 {
+        return nil, errors.New("Please specify your Password")
+    }
+    if len(confirmPass) == 0 {
+        return nil, errors.New("Please re-enter your Password")
+    }
+    if pass != confirmPass {
+        return nil, errors.New("Password does not match to Confirmed Password")
+    }
+
+    user := &user.User{
+        Name: name,
+        Email: email,
+        Password: pass,
+        Info: info,
+    }
+
+    return user.Register()
+}
+
 func auth(email, password string, w http.ResponseWriter) error {
     if len(email) == 0 || len(password) == 0 {
         return errors.New("")
     }
 
-    user := &user.User{}
-    return user.Auth(email, password, w)
+    _, err := user.Auth(email, password, w)
+
+    return err
 }
+
+func sendRegistrationEmail(user *user.User) error {
+    msg  := "New account!\n\n"+
+    "Email: " + user.Email + "\n\n"+
+    "Pass: " + user.Password + "\n\n"+
+    "Api Key: " + user.ApiKey + "\n\n"+
+    "Token: " + user.Token + "\n\n"+
+    "About: " + user.Info + "\n\n"+
+    "SDK Link: \n\n"+
+    "Panel LInk: \n\n"
+
+    mail := &mailer.Email{
+        From:    config.RegisterEmailFrom,
+        To:      config.RegisterEmailTo,
+        Subject: config.RegisterEmailSubject,
+        Msg: msg,
+    }
+
+    return mail.Send()
+}
+

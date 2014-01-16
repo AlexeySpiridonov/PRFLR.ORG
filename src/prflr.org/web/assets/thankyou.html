@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/main.css" />
 </head>
 <body>
-<div class="register">
+<div class="auth">
     <!-- HEADER -->
     <table>
         <td width="250">
@@ -22,20 +22,11 @@
         </td>
     </table>
 
+    <div class="spacer">&nbsp;</div>
+
     <!-- CONTENT -->
-    <br/><br clear="both" />
-    <h1>Register</h1>
-    <font color="red">{{.registerErr}}</font>
-    <form action="" method="POST" name="registerForm" id="registerForm" onsubmit="$('#submitButton').html('Please wait...').prop('disabled', true);" >
-        <input class="text" value="{{.name}}" type="text" name="name" autocomplete="off" placeholder="Your Full Name" /><br/><br/>
-        <input class="text" value="{{.email}}" type="text" name="email" autocomplete="off" placeholder="Email" /><br/><br/>
-        <input class="text" value="{{.pass}}" type="password" name="pass" autocomplete="off" placeholder="Password" /><br/>
-        <input class="text" value="{{.confirm_pass}}" type="password" name="confirm_pass" autocomplete="off" placeholder="Confirm Password" /><br/><br/>
-        <textarea placeholder="A few words about yourself" name="info" rows="5" cols="50">{{.info}}</textarea>
-        <br/>
-        <input type="hidden" name="register" value="register" />
-        <button id="submitButton" type="submit">Submit</button>
-    </form>
+    <br clear="both" />
+    <div align="center">Thank you for your registration! We got your request and will email you shortly!</div>
     <br clear="both" />
 </div>
 

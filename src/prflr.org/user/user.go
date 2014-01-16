@@ -2,6 +2,7 @@ package user
 
 import(
     "labix.org/v2/mgo/bson"
+    "prflr.org/stringHelper"
     "prflr.org/config"
     "prflr.org/db"
     "net/http"
@@ -18,30 +19,12 @@ type User struct {
     Email    string
     Password string
     ApiKey   string
-    Token    float32
+    Token    string
     Name     string
     Info     string
+    Status   string
 }
 
-func (user *User) GetUser(email string, password string) error {
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBUsers)
-
-    c := make(map[string]interface{})
-    c["email"]    = email
-    c["password"] = password // @TODO: add md5 ?
-
-    err := dbc.Find(c).One(&user)
-
-    session.Close()
-
-    if err != nil {
-        return errors.New("No such a User with given Email and Password")
-    }
-
-    return nil
-}
 
 func (user *User) GetUserByApiKey(apiKey string) error {
     session := db.GetConnection()
@@ -82,16 +65,66 @@ func (user *User) GetCurrentUser(r *http.Request) error {
     return nil
 }
 
-func (user *User) Auth(email string, password string, w http.ResponseWriter) error {
+func (user *User) Register() (*User, error) {
+    // check if a user with given Email already exists
+    if _, err := getUserByEmail(user.Email); err == nil {
+        return nil, errors.New("User with such Email already exists! Please provide another one")
+    }
+
+    // @TODO: validate user's attributes
+
+    user.Token  = user.GenerateToken()
+    user.ApiKey = user.GenerateApiKey()
+    user.Status = "disabled"
+
+    err := user.Save(true)
+
+    return user, err
+}
+
+func Auth(email string, password string, w http.ResponseWriter) (*User, error) {
     // getting User from DB via Email & Password
-    err := user.GetUser(email, password)
+    user, err := getUserByEmail(email)
     if err != nil {
-        return err
+        return nil, err
+    }
+
+    if user.Password != password {
+        return nil, errors.New("No such user with given Email and Password")
+    }
+
+    if user.Password != password {
+        return nil, errors.New("No such user with given Email and Password")
+    }
+
+    if len(user.Status) > 0 && user.Status != "enabled" {
+        return nil, errors.New("Your account is not active at the moment. Please try again later")
     }
 
     user.saveUserToCookie(w)
 
-    return nil
+    return user, nil
+}
+
+/* NOT EXPORTED!!! */
+func getUserByEmail(email string) (*User, error) {
+    session := db.GetConnection()
+    db      := session.DB(config.DBName)
+    dbc     := db.C(config.DBUsers)
+
+    c := make(map[string]interface{})
+    c["email"] = email
+
+    var user *User
+    err := dbc.Find(c).One(&user)
+
+    session.Close()
+
+    if err != nil {
+        return nil, errors.New("No such a User with given Email and Password")
+    }
+
+    return user, nil
 }
 
 /* NOT EXPORTED!!! */
@@ -135,7 +168,7 @@ func (user *User) Logout(w http.ResponseWriter) {
     http.SetCookie(w, &cookie)
 }
 
-func (user *User) Save() error {
+func (user *User) Save(insertIfNotExists bool) error {
     if len(user.ApiKey) <= 0 {
         return errors.New("Cannot save user: given ApiKey is empty!")
     }
@@ -148,7 +181,12 @@ func (user *User) Save() error {
     selector := make(map[string]interface{})
     selector["apikey"] = user.ApiKey
 
-    err := dbc.Update(selector, user)
+    var err error
+    if insertIfNotExists {
+        _, err = dbc.Upsert(selector, user)
+    } else {
+        err = dbc.Update(selector, user)
+    }
 
     session.Close()
 
@@ -182,4 +220,15 @@ func (user *User) SetApiKey(apiKey string, w http.ResponseWriter) error {
     session.Close()
 
     return err
+}
+
+func (user *User) GenerateToken() string {
+    // @TODO: use md5(microtime())
+    return stringHelper.RandomString(32)
+}
+
+func (user *User) GenerateApiKey() string {
+    // @TODO: check if Token is given
+    // @TODO: use User.Token + md5(microtime())
+    return stringHelper.RandomString(32)
 }

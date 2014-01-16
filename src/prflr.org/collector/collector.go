@@ -27,6 +27,7 @@ func Start() {
     for {
         n, _, err := l.ReadFromUDP(buffer[0:])
         if err != nil {
+            log.Print("! Collector.go::ReadFromUDP !")
             log.Panic(err)
         }
         go saveMessage(string(buffer[0:n]))
@@ -38,6 +39,7 @@ func saveMessage(msg string) {
     timer := parseStringToTimer(msg)
     err   := timer.Save()
     if err != nil {
+        log.Print("! Collector.go::saveMessage !")
         log.Panic(err)
     }
 }
@@ -47,6 +49,7 @@ func parseStringToTimer(msg string) timer.Timer {
 
     time, err := strconv.ParseFloat(fields[3], 32)
     if err != nil {
+        log.Print("! Collector.go::parseStringToTimer !")
         log.Panic(err)
     }
 
