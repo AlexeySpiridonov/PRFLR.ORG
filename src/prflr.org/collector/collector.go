@@ -54,7 +54,7 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
     fields := strings.Split(msg, "|")
 
     if (len(fields) < 6) {
-        return nil, errors.New("Ivalid format")
+        return nil, errors.New("Invalid format")
     }
 
     time, err := strconv.ParseFloat(fields[3], 32)
