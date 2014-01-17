@@ -7,6 +7,7 @@ import (
     "net"
     "strconv"
     "strings"
+    "errors"
 )
 
 /* Starting UDP Server */
@@ -56,7 +57,7 @@ func parseStringToTimer(msg string) (timer.Timer, error) {
     if err != nil {
         log.Print(err)
         //log.Panic(err)
-        return nil, errors.New("Cannot parse string " + string)
+        return nil, errors.New("Cannot parse string " + msg)
     }
 
     //TODO add check for apikey and crop for fields lenght
