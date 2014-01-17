@@ -75,7 +75,7 @@ func (user *User) Register() (*User, error) {
 
     user.Token  = user.GenerateToken()
     user.ApiKey = user.GenerateApiKey()
-    user.Status = "disabled"
+    user.Status = "enabled"
 
     err := user.Save(true)
 
