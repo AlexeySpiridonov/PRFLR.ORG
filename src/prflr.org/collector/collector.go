@@ -53,6 +53,10 @@ func saveMessage(msg string) {
 func parseStringToTimer(msg string) (*timer.Timer, error) {
     fields := strings.Split(msg, "|")
 
+    if (len(fields) < 6) {
+        return nil, errors.New("Ivalid format")
+    }
+
     time, err := strconv.ParseFloat(fields[3], 32)
     if err != nil {
         log.Print(err)
