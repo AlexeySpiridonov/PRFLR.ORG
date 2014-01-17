@@ -27,7 +27,7 @@ func Start() {
     for {
         n, _, err := l.ReadFromUDP(buffer[0:])
         if err != nil {
-            log.Print("! Collector.go::ReadFromUDP !")
+            //log.Print("! Collector.go::ReadFromUDP !")
             log.Panic(err)
         }
         go saveMessage(string(buffer[0:n]))
@@ -36,23 +36,29 @@ func Start() {
 
 /* UDP Handlers */
 func saveMessage(msg string) {
-    timer := parseStringToTimer(msg)
-    err   := timer.Save()
+    timer, err := parseStringToTimer(msg)
     if err != nil {
-        log.Print("! Collector.go::saveMessage !")
-        log.Panic(err)
+        log.Print(err)
+        //log.Panic(err)
+    } else {
+        err = timer.Save()
+        if err != nil {
+            log.Print(err)
+            //log.Panic(err)
+        }
     }
 }
 
-func parseStringToTimer(msg string) timer.Timer {
+func parseStringToTimer(msg string) (timer.Timer, error) {
     fields := strings.Split(msg, "|")
 
     time, err := strconv.ParseFloat(fields[3], 32)
     if err != nil {
-        log.Print("! Collector.go::parseStringToTimer !")
-        log.Panic(err)
+        log.Print(err)
+        //log.Panic(err)
+        return nil, errors.New("Cannot parse string " + string)
     }
 
     //TODO add check for apikey and crop for fields lenght
-    return timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}
+    return timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}, nil
 }
