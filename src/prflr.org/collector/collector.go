@@ -50,7 +50,7 @@ func saveMessage(msg string) {
     }
 }
 
-func parseStringToTimer(msg string) (timer.Timer, error) {
+func parseStringToTimer(msg string) (*timer.Timer, error) {
     fields := strings.Split(msg, "|")
 
     time, err := strconv.ParseFloat(fields[3], 32)
