@@ -61,5 +61,5 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
     }
 
     //TODO add check for apikey and crop for fields lenght
-    return timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}, nil
+    return &timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}, nil
 }
