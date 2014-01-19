@@ -12,6 +12,11 @@ function start(){
 	    var selector = $(this).attr('href');
 	    $(selector).show();
 
+        // flurry
+        if (typeof(FlurryAgent) != 'undefined') {
+            FlurryAgent.logEvent('trackMenuItemClick', {'item': selector});
+        }
+
 		var filter    = $('.profiler_block:visible').find('input[name=filter]').val();
 	    var filterVal = typeof(filter) != 'undefined' && filter.length > 0 ? filter : '*/*/*/*';
 
