@@ -3,7 +3,7 @@ package collector
 import (
     "prflr.org/config"
     "prflr.org/timer"
-    "log"
+    "prflr.org/PRFLRLogger"
     "net"
     "strconv"
     "strings"
@@ -15,12 +15,12 @@ func Start() {
     // @TODO: add here UDP aggregator  in  different thread
     laddr, err := net.ResolveUDPAddr("udp", config.UDPPort)
     if err != nil {
-        log.Fatal(err)
+        PRFLRLogger.Fatal(err)
     }
 
     l, err := net.ListenUDP("udp", laddr)
     if err != nil {
-        log.Fatal(err)
+        PRFLRLogger.Fatal(err)
     }
 
     // is Buffer enough?!?!
@@ -28,9 +28,10 @@ func Start() {
     for {
         n, _, err := l.ReadFromUDP(buffer[0:])
         if err != nil {
-            //log.Print("! Collector.go::ReadFromUDP !")
-            log.Panic(err)
+            PRFLRLogger.Error(err)
+            continue
         }
+
         go saveMessage(string(buffer[0:n]))
     }
 }
@@ -38,15 +39,16 @@ func Start() {
 /* UDP Handlers */
 func saveMessage(msg string) {
     timer, err := parseStringToTimer(msg)
+
+    // Couldn't Parse? Wrong Format? Just skip it!!!
     if err != nil {
-        log.Print(err)
-        //log.Panic(err)
-    } else {
-        err = timer.Save()
-        if err != nil {
-            log.Print(err)
-            //log.Panic(err)
-        }
+        PRFLRLogger.Error(err)
+        return
+    }
+
+    err = timer.Save()
+    if err != nil {
+        PRFLRLogger.Error(err)
     }
 }
 
@@ -59,8 +61,7 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
 
     time, err := strconv.ParseFloat(fields[3], 32)
     if err != nil {
-        log.Print(err)
-        //log.Panic(err)
+        PRFLRLogger.Error(err)
         return nil, errors.New("Cannot parse string " + msg)
     }
 

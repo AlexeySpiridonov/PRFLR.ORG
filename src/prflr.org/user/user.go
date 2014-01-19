@@ -27,16 +27,19 @@ type User struct {
 
 
 func (user *User) GetUserByApiKey(apiKey string) error {
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBUsers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBUsers)
 
     c := make(map[string]interface{})
     c["apikey"] = apiKey
 
-    err := dbc.Find(c).One(&user)
-
-    session.Close()
+    err = dbc.Find(c).One(&user)
 
     if err != nil {
         return errors.New("No such a User with given ApiKey")
@@ -81,7 +84,6 @@ func (user *User) Register() (*User, error) {
 
     return user, err
 }
-
 func Auth(email string, password string, w http.ResponseWriter) (*User, error) {
     // getting User from DB via Email & Password
     user, err := getUserByEmail(email)
@@ -105,20 +107,27 @@ func Auth(email string, password string, w http.ResponseWriter) (*User, error) {
 
     return user, nil
 }
+func (user *User) Recover() (*User, error) {
+    // check if a user with given Email exists
+    return getUserByEmail(user.Email)
+}
 
 /* NOT EXPORTED!!! */
 func getUserByEmail(email string) (*User, error) {
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBUsers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return nil, err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBUsers)
 
     c := make(map[string]interface{})
     c["email"] = email
 
     var user *User
-    err := dbc.Find(c).One(&user)
-
-    session.Close()
+    err = dbc.Find(c).One(&user)
 
     if err != nil {
         return nil, errors.New("No such a User with given Email and Password")
@@ -173,22 +182,26 @@ func (user *User) Save(insertIfNotExists bool) error {
         return errors.New("Cannot save user: given ApiKey is empty!")
     }
 
+    var err error
+
     // @TODO: add validation and Error Handling
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBUsers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBUsers)
 
     selector := make(map[string]interface{})
     selector["apikey"] = user.ApiKey
 
-    var err error
     if insertIfNotExists {
         _, err = dbc.Upsert(selector, user)
     } else {
         err = dbc.Update(selector, user)
     }
-
-    session.Close()
 
     return err
 }
@@ -202,22 +215,25 @@ func (user *User) SetApiKey(apiKey string, w http.ResponseWriter) error {
     }
 
     // @TODO: add validation and Error Handling
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBUsers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBUsers)
 
     selector := make(map[string]interface{})
     selector["apikey"] = user.ApiKey
 
     modifier := &bson.M{"$set": bson.M{"apikey": apiKey}}
 
-    err := dbc.Update(selector, modifier)
+    err = dbc.Update(selector, modifier)
 
     // saving new User's ApiKey to Cookies
     user.ApiKey = apiKey
     user.saveUserToCookie(w)
-
-    session.Close()
 
     return err
 }

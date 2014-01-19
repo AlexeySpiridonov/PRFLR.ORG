@@ -2,3 +2,6 @@
 .idea
 pkg
 prflr
+src/github.com
+src/prflr.org/PRFLRLogger
+

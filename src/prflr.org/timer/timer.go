@@ -33,26 +33,34 @@ type Stat struct {
 
 func GetList(query interface{}) (*[]Timer, error) {
     // @TODO: add validation and Error Handling
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBTimers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return nil, err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBTimers)
 
     // Query All
     var results []Timer
 
     //TODO add criteria builder
-    err := dbc.Find(query).Sort("-_id").Limit(100).All(&results)
-
-    session.Close()
+    err = dbc.Find(query).Sort("-_id").Limit(100).All(&results)
 
     return &results, err
 }
 
 func Aggregate(criteria interface{}, groupBy map[string]interface{}, sortBy string) (*[]Stat, error) {
     // @TODO: add validation and Error Handling
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBTimers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return nil, err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBTimers)
 
     var results []Stat
 
@@ -77,40 +85,44 @@ func Aggregate(criteria interface{}, groupBy map[string]interface{}, sortBy stri
     match := bson.M{"$match": criteria}
     aggregate := []bson.M{match, group, sort}
 
-    err := dbc.Pipe(aggregate).All(&results)
-
-    session.Close()
+    err = dbc.Pipe(aggregate).All(&results)
 
     return &results, err
 }
 
 func SetApiKey(oldApiKey, newApiKey string) error {
     // @TODO: add validation and Error Handling
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBTimers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return err
+    }
+    defer session.Close()
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBTimers)
 
     selector := make(map[string]interface{})
     selector["apikey"] = oldApiKey
 
     modifier := &bson.M{"$set": bson.M{"apikey": newApiKey}}
 
-    _, err := dbc.UpdateAll(selector, modifier)
-
-    session.Close()
+    _, err = dbc.UpdateAll(selector, modifier)
 
     return err
 }
 
 func (timer *Timer) Save() error {
     // @TODO: add validation and Error Handling
-    session := db.GetConnection()
-    db      := session.DB(config.DBName)
-    dbc     := db.C(config.DBTimers)
+    session, err := db.GetConnection()
+    if err != nil {
+        return err
+    }
+    defer session.Close()
 
-    err := dbc.Insert(timer)
+    db  := session.DB(config.DBName)
+    dbc := db.C(config.DBTimers)
 
-    session.Close()
+    err = dbc.Insert(timer)
 
     return err
 }

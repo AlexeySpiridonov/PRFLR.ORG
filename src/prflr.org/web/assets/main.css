@@ -1,6 +1,6 @@
 body {font-family: Times New Roman;}
 
-div.auth, div.register {font-style: Italic; font-size: 1.1em; width: 1000px;margin: 0 auto}
+div.auth, div.recovery, div.register {font-style: Italic; font-size: 1.1em; width: 1000px;margin: 0 auto}
 
 
 .spacer {height: 100px}
@@ -69,4 +69,4 @@ div.auth, div.register {font-style: Italic; font-size: 1.1em; width: 1000px;marg
 .userPanelName {font-size: 20px}
 .userPanelLogout {font-size: 12px}
 
-#registerForm input, #registerForm textarea {padding: 5px; width: 300px;font-size: 1em}
+#registerForm input, #recoveryForm input, #registerForm textarea {padding: 5px; width: 300px;font-size: 1em}

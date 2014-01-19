@@ -6,13 +6,13 @@ import (
     "prflr.org/timer"
     "prflr.org/mailer"
     "prflr.org/urlHelper"
+    "prflr.org/PRFLRLogger"
     "labix.org/v2/mgo/bson"
     "encoding/json"
     "html/template"
     "net/http"
     "errors"
-    "fmt"   
-    "log"
+    "fmt"
     "strings"
 )
 
@@ -24,6 +24,7 @@ func Start() {
     http.HandleFunc("/aggregate/", aggregateHandler)
     http.HandleFunc("/register/", registerHandler)
     http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
+    http.HandleFunc("/passwordRecovered/", passwordRecoveredHandler)
     http.HandleFunc("/thankyou/", thankyouHandler)
     http.HandleFunc("/resetApiKey/", resetApiKeyHandler)
     http.HandleFunc("/logout/", logoutHandler)
@@ -49,7 +50,8 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
         // ok, no user then show Auth Page
         t, err := template.ParseFiles(config.BaseDir + "web/assets/auth.html")
         if err != nil {
-            log.Fatal(err)
+            PRFLRLogger.Error(err)
+            return
         }
 
         tplVars := make(map[string]interface{})
@@ -61,7 +63,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
         // let's show Web Panel for this user
         t, err := template.ParseFiles(config.BaseDir + "web/assets/main.html")
         if err != nil {
-            log.Fatal(err)
+            PRFLRLogger.Error(err)
         }
         t.Execute(w, user)
     }
@@ -87,7 +89,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     if len(registerAttempt) > 0 {
         user, registerErr := register(name, email, pass, confirmPass, info)
         if registerErr == nil {
-            sendRegistrationEmail(user)
+            go sendRegistrationEmail(user)
             http.Redirect(w, r, urlHelper.GenerateUrl("/thankyou"), http.StatusFound)
         }
         tplVars["registerErr"]  = registerErr
@@ -96,14 +98,40 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     // ok, no user then show Auth Page
     t, err := template.ParseFiles(config.BaseDir + "web/assets/register.html")
     if err != nil {
-        log.Fatal(err)
+        PRFLRLogger.Error(err)
+        return
     }
 
     t.Execute(w, tplVars)
 }
 
 func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
-    t, _ := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
+    // check for Recovery Form Submit
+    email:= r.PostFormValue("email")
+    recoveryAttempt := r.PostFormValue("recovery")
+
+    tplVars := make(map[string]interface{})
+    tplVars["email"] = email
+
+    if len(recoveryAttempt) > 0 {
+        user, recoveryErr := recoverPassword(email)
+        if recoveryErr == nil {
+            go sendRecoveryEmail(user)
+            http.Redirect(w, r, urlHelper.GenerateUrl("/passwordRecovered"), http.StatusFound)
+        }
+        tplVars["recoveryErr"]  = recoveryErr
+    }
+
+    t, err := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
+    if err != nil {
+        PRFLRLogger.Error(err)
+        return
+    }
+
+    t.Execute(w, tplVars)
+}
+func passwordRecoveredHandler(w http.ResponseWriter, r *http.Request) {
+    t, _ := template.ParseFiles(config.BaseDir + "web/assets/passwordRecovered.html")
     t.Execute(w, nil)
 }
 
@@ -121,7 +149,7 @@ func resetApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 
         // Changing User's ApiKey and Cookies
         if err := user.SetApiKey(user.GenerateApiKey(), w); err != nil {
-            log.Print(err)
+            PRFLRLogger.Error(err)
         }
 
         // Updating existing Timers with new ApiKey in order to not lose it!
@@ -150,13 +178,17 @@ func lastHandler(w http.ResponseWriter, r *http.Request) {
 
     results, err := timer.GetList(criteria);
     if err != nil {
-      log.Panic(err)
+      PRFLRLogger.Error(err)
+      return
     }
 
     j, err := json.Marshal(&results)
     if err != nil {
-        log.Panic(err)
+        PRFLRLogger.Error(err)
+        return
     }
+
+    // Output JSON!
     fmt.Fprintf(w, "%s", j)
 }
 
@@ -183,14 +215,17 @@ func aggregateHandler(w http.ResponseWriter, r *http.Request) {
 
     results, err := timer.Aggregate(criteria, groupBy, sortBy)
     if err != nil {
-        log.Panic(err)
+        PRFLRLogger.Error(err)
+        return
     }
 
     j, err := json.Marshal(results)
     if err != nil {
-        log.Fatal(err)
+        PRFLRLogger.Error(err)
+        return
     }
 
+    // Output JSON!
     fmt.Fprintf(w, "%s", j)
 }
 
@@ -239,6 +274,17 @@ func register(name, email, pass, confirmPass, info string) (*user.User, error) {
 
     return user.Register()
 }
+func recoverPassword(email string) (*user.User, error) {
+    if len(email) == 0 {
+        return nil, errors.New("Please specify your Email address")
+    }
+
+    user := &user.User{
+        Email: email,
+    }
+
+    return user.Recover()
+}
 
 func auth(email, password string, w http.ResponseWriter) error {
     if len(email) == 0 || len(password) == 0 {
@@ -251,22 +297,74 @@ func auth(email, password string, w http.ResponseWriter) error {
 }
 
 func sendRegistrationEmail(user *user.User) error {
-    msg  := "New account!\n\n"+
-    "Email: " + user.Email + "\n\n"+
-    "Pass: " + user.Password + "\n\n"+
-    "Api Key: " + user.ApiKey + "\n\n"+
-    "Token: " + user.Token + "\n\n"+
-    "About: " + user.Info + "\n\n"+
-    "SDK Link: \n\n"+
-    "Panel LInk: \n\n"
+    msg  := "Приветствуем!\n\nСпасибо что решили ответственно подойти к производительности ваших проектов.!\n\n"+
+    "Данные для использования сервиса:\n\n"+
 
+    "Email: " + user.Email + "\n"+
+    "Pass: "  + user.Password + "\n"+
+    "Api Key: " + user.ApiKey + "\n\n"+
+
+    "Эти ссылки будут необходимы для интеграции SDK и использования PRFLR:\n\n"+
+
+    "SDK: https://github.com/PRFLR/SDK\n"+
+    "WebPanel: http://prflr.org\n"+
+    "Tutorials: https://github.com/PRFLR/SDK/wiki\n\n"+
+
+    "Good luck in neverending fight for milliseconds!\n"+
+    "PRFLR Team © 2014, info@prflr.org\n\n"
+
+    // sending to the User
     mail := &mailer.Email{
+        From:    config.RegisterEmailFrom,
+        To:      user.Email,
+        Subject: config.RegisterEmailSubject,
+        Msg: msg,
+    }
+
+    err := mail.Send()
+    if err != nil {
+        PRFLRLogger.Error(err)
+    }
+
+    // Sending to PRFLR Team!
+    mail = &mailer.Email{
         From:    config.RegisterEmailFrom,
         To:      config.RegisterEmailTo,
         Subject: config.RegisterEmailSubject,
         Msg: msg,
     }
 
-    return mail.Send()
+    err = mail.Send()
+    if err != nil {
+        PRFLRLogger.Error(err)
+    }
+
+    return nil
+}
+
+func sendRecoveryEmail(user *user.User) error {
+    msg  := "Hello there!\n\n"+
+
+    "Your Pass: "  + user.Password + "\n\n"+
+
+    "Please try to login at : http://prflr.org\n\n"+
+
+    "Good luck in neverending fight for milliseconds!\n"+
+    "PRFLR Team © 2014, info@prflr.org\n\n"
+
+    // sending to the User
+    mail := &mailer.Email{
+        From:    config.RecoveryEmailFrom,
+        To:      user.Email,
+        Subject: config.RecoveryEmailSubject,
+        Msg: msg,
+    }
+
+    err := mail.Send()
+    if err != nil {
+        PRFLRLogger.Error(err)
+    }
+
+    return nil
 }
 
