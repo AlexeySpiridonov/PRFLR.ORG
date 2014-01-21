@@ -310,8 +310,9 @@ func sendRegistrationEmail(user *user.User) error {
     "WebPanel: http://prflr.org\n"+
     "Tutorials: https://github.com/PRFLR/SDK/wiki\n\n"+
 
-    "Good luck in neverending fight for milliseconds!\n\n"+
-    "PRFLR Team © 2014, info@prflr.org\n\n"
+    "Good luck in neverending fight for milliseconds!\n"+
+    "PRFLR Team © 2014, info@prflr.org\n\n"+
+    "Join to our G+ Community: http://goo.gl/AqJV4V"
 
     // sending to the User
     mail := &mailer.Email{
@@ -347,10 +348,11 @@ func sendRecoveryEmail(user *user.User) error {
 
     "Your Pass: "  + user.Password + "\n\n"+
 
-    "Please try to login at : http://prflr.org\n\n"+
+    "Please try to login at: http://prflr.org\n\n"+
 
     "Good luck in neverending fight for milliseconds!\n"+
-    "PRFLR Team © 2014, info@prflr.org\n\n"
+    "PRFLR Team © 2014, info@prflr.org\n\n"+
+    "Join to our G+ Community: http://goo.gl/AqJV4V"
 
     // sending to the User
     mail := &mailer.Email{
