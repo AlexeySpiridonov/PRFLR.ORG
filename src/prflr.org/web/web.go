@@ -297,7 +297,7 @@ func auth(email, password string, w http.ResponseWriter) error {
 }
 
 func sendRegistrationEmail(user *user.User) error {
-    msg  := "Приветствуем!\n\nСпасибо что решили ответственно подойти к производительности ваших проектов.!\n\n"+
+    msg  := "Приветствуем!\n\nСпасибо, что решили ответственно подойти к производительности ваших проектов!\n\n"+
     "Данные для использования сервиса:\n\n"+
 
     "Email: " + user.Email + "\n"+
@@ -310,7 +310,7 @@ func sendRegistrationEmail(user *user.User) error {
     "WebPanel: http://prflr.org\n"+
     "Tutorials: https://github.com/PRFLR/SDK/wiki\n\n"+
 
-    "Good luck in neverending fight for milliseconds!\n"+
+    "Good luck in neverending fight for milliseconds!\n\n"+
     "PRFLR Team © 2014, info@prflr.org\n\n"
 
     // sending to the User

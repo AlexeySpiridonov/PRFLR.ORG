@@ -98,8 +98,8 @@ func SetApiKey(oldApiKey, newApiKey string) error {
     }
     defer session.Close()
 
-    db  := session.DB(config.DBName)
-    dbc := db.C(config.DBTimers)
+    db2 := session.DB(config.DBName)
+    dbc := db2.C(config.DBTimers)
 
     selector := make(map[string]interface{})
     selector["apikey"] = oldApiKey
@@ -119,8 +119,8 @@ func (timer *Timer) Save() error {
     }
     defer session.Close()
 
-    db  := session.DB(config.DBName)
-    dbc := db.C(config.DBTimers)
+    db2 := session.DB(config.DBName)
+    dbc := db2.C(config.DBTimers)
 
     err = dbc.Insert(timer)
 

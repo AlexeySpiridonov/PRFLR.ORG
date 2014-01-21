@@ -3,6 +3,7 @@ package collector
 import (
     "prflr.org/config"
     "prflr.org/timer"
+    "prflr.org/db"
     "prflr.org/PRFLRLogger"
     "net"
     "strconv"
@@ -22,6 +23,8 @@ func Start() {
     if err != nil {
         PRFLRLogger.Fatal(err)
     }
+
+    db.Init()
 
     // is Buffer enough?!?!
     var buffer [500]byte
@@ -45,6 +48,8 @@ func saveMessage(msg string) {
         PRFLRLogger.Error(err)
         return
     }
+
+    //PRFLRLogger.Debug("Saving timer: " + msg)
 
     err = timer.Save()
     if err != nil {

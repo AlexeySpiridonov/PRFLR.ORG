@@ -13,11 +13,12 @@ func Debug(v ...interface{}) {
 	if err != nil {
 		return
 	}
+	defer f.Close()
 
 	// @TODO: Include runtime.Stack() trace
 
 	log.SetOutput(f)
-	log.Println(v)
+	log.Print(v)
 }
 
 func Error(v ...interface{}) {
@@ -26,11 +27,12 @@ func Error(v ...interface{}) {
 	if err != nil {
 		return
 	}
+	defer f.Close()
 
 	// @TODO: Include runtime.Stack() trace
 
 	log.SetOutput(f)
-	log.Println(v)
+	log.Print(v)
 }
 
 // Just a wrapper
@@ -40,12 +42,11 @@ func Fatal(v ...interface{}) {
 
 /* NOT EXPORTED */
 func getFile(filename string) (file *os.File, err error) {
-	f, err := os.OpenFile(filename, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	f, err := os.OpenFile(filename, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0777)
 
 	if err != nil {
 	    return nil, err
 	}
-	defer f.Close()
 
 	return f, nil
 }
