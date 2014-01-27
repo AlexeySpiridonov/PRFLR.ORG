@@ -29,3 +29,13 @@ func RandomString(n int) string {
 
     return string(bytes)
 }
+
+func GetCappedCollectionNameForApiKey(apiKey string) string {
+    collectionName := "timers_" + apiKey
+
+    if len(collectionName) > 125 {
+        collectionName = collectionName[:125] // NO More than 125 chars!
+    }
+
+    return collectionName
+}

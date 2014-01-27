@@ -89,7 +89,13 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     if len(registerAttempt) > 0 {
         user, registerErr := register(name, email, pass, confirmPass, info)
         if registerErr == nil {
+            // Creating Capped Collection for this User
+            go user.CreatePrivateStorage()
+
+            // Sending Email Notifications
             go sendRegistrationEmail(user)
+
+            // Getting Hell out of here!!! Whheeeee!!!!111 =)
             http.Redirect(w, r, urlHelper.GenerateUrl("/thankyou"), http.StatusFound)
         }
         tplVars["registerErr"]  = registerErr

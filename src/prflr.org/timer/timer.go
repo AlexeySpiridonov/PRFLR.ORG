@@ -1,6 +1,7 @@
 package timer
 
 import(
+    "prflr.org/stringHelper"
     "prflr.org/config"
     "prflr.org/db"
     "labix.org/v2/mgo/bson"
@@ -119,8 +120,11 @@ func (timer *Timer) Save() error {
     }
     defer session.Close()
 
+    // define User's Collection Name to Save Timers to
+    collectionName := stringHelper.GetCappedCollectionNameForApiKey(timer.Apikey)
+
     db2 := session.DB(config.DBName)
-    dbc := db2.C(config.DBTimers)
+    dbc := db2.C(collectionName)
 
     err = dbc.Insert(timer)
 

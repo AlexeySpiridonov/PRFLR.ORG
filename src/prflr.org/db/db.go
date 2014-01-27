@@ -27,6 +27,12 @@ func GetConnection() (*mgo.Session, error) {
     return dbSingletonVar.Session.Copy(), nil
 }
 
+func CreateCappedCollection(dbc *mgo.Collection, cappedCollectionMaxByte, cappedCollectionMaxDocs int) error {
+    // creating capped collection
+    return dbc.Create(&mgo.CollectionInfo{Capped: true, MaxBytes: cappedCollectionMaxByte, MaxDocs: cappedCollectionMaxDocs})
+}
+
+/* Not Exported */
 func connect() error {
     if dbSingletonVar == nil {
         var err error

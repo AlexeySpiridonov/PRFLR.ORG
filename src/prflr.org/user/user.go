@@ -3,9 +3,11 @@ package user
 import(
     "labix.org/v2/mgo/bson"
     "prflr.org/stringHelper"
+    "prflr.org/PRFLRLogger"
     "prflr.org/config"
     "prflr.org/db"
     "net/http"
+    //"strings"
     "errors"
     "time"
     //"log"
@@ -242,9 +244,26 @@ func (user *User) GenerateToken() string {
     // @TODO: use md5(microtime())
     return stringHelper.RandomString(32)
 }
-
 func (user *User) GenerateApiKey() string {
     // @TODO: check if Token is given
     // @TODO: use User.Token + md5(microtime())
     return stringHelper.RandomString(32)
+}
+
+func (user *User) CreatePrivateStorage() {
+    collectionName := stringHelper.GetCappedCollectionNameForApiKey(user.ApiKey)
+
+    session, err := db.GetConnection()
+    if err != nil {
+        PRFLRLogger.Error(err)
+        return
+        //return nil, err
+    }
+    defer session.Close()
+
+    // creating capped collection
+    err = db.CreateCappedCollection(session.DB(config.DBName).C(collectionName), config.CappedCollectionMaxByte, config.CappedCollectionMaxDocs)
+    if err != nil {
+        PRFLRLogger.Error(err)
+    }
 }
