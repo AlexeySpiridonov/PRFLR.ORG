@@ -303,7 +303,7 @@ func auth(email, password string, w http.ResponseWriter) error {
 }
 
 func sendRegistrationEmail(user *user.User) error {
-    msg  := "Приветствуем!\n\nСпасибо, что решили ответственно подойти к производительности ваших проектов!\n\n"+
+    msg  := "Greetings!\n\nСпасибо, что решили ответственно подойти к производительности ваших проектов!\n\n"+
     "Данные для использования сервиса:\n\n"+
 
     "Email: " + user.Email + "\n"+
