@@ -319,7 +319,7 @@ func sendRegistrationEmail(user *user.User) error {
 
     "Good luck in neverending fight for milliseconds!\n"+
     "PRFLR Team © 2014, info@prflr.org\n\n"+
-    "Join to our G+ Community: http://goo.gl/AqJV4V"
+    "Join our G+ Community: http://goo.gl/AqJV4V"
 
     // sending to the User
     mail := &mailer.Email{
@@ -359,7 +359,7 @@ func sendRecoveryEmail(user *user.User) error {
 
     "Good luck in neverending fight for milliseconds!\n"+
     "PRFLR Team © 2014, info@prflr.org\n\n"+
-    "Join to our G+ Community: http://goo.gl/AqJV4V"
+    "Join our G+ Community: http://goo.gl/AqJV4V"
 
     // sending to the User
     mail := &mailer.Email{
