@@ -22,12 +22,11 @@ const (
     CappedCollectionMaxByte = 100000000 // 100Mb
     CappedCollectionMaxDocs = 2000000    // 2M timers   
 
-    RegisterEmailFrom       = "register@prflr.org"
+    RegisterEmailFrom       = "robot@prflr.org"
     RegisterEmailTo         = "info@prflr.org"
     RegisterEmailSubject    = "New Account Registered!"
 
-    RecoveryEmailFrom       = "recover@prflr.org"
-    RecoveryEmailTo         = "info@prflr.org"
+    RecoveryEmailFrom       = "robot@prflr.org"
     RecoveryEmailSubject    = "Your PRFLR Account Password"
 
     FlurryAppKey            = "VG4NW39X4ZYWBYSNNT5P"

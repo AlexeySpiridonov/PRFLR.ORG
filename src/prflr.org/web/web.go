@@ -93,6 +93,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
             go user.CreatePrivateStorage()
 
             // Sending Email Notifications
+            //go sendRegistrationEmail(user)
             go sendRegistrationEmail(user)
 
             // Getting Hell out of here!!! Whheeeee!!!!111 =)
@@ -303,14 +304,14 @@ func auth(email, password string, w http.ResponseWriter) error {
 }
 
 func sendRegistrationEmail(user *user.User) error {
-    msg  := "Greetings!\n\nСпасибо, что решили ответственно подойти к производительности ваших проектов!\n\n"+
-    "Данные для использования сервиса:\n\n"+
+    msg  := "Greetings!\n\nThank you for your decision to make your projects performance even better!\n\n"+
+    "Please find all the service information below:\n\n"+
 
     "Email: " + user.Email + "\n"+
     "Pass: "  + user.Password + "\n"+
-    "Api Key: " + user.ApiKey + "\n\n"+
+    "API Key: " + user.ApiKey + "\n\n"+
 
-    "Эти ссылки будут необходимы для интеграции SDK и использования PRFLR:\n\n"+
+    "Following links are for the SDK Integration into your application:\n\n"+
 
     "SDK: https://github.com/PRFLR/SDK\n"+
     "WebPanel: http://prflr.org\n"+
@@ -350,7 +351,7 @@ func sendRegistrationEmail(user *user.User) error {
 }
 
 func sendRecoveryEmail(user *user.User) error {
-    msg  := "Hello there!\n\n"+
+    msg  := "Greetings!\n\n"+
 
     "Your Pass: "  + user.Password + "\n\n"+
 
