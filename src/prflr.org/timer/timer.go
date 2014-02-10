@@ -32,7 +32,7 @@ type Stat struct {
     Max   float32
 }
 
-func GetList(query interface{}) (*[]Timer, error) {
+func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
     // @TODO: add validation and Error Handling
     session, err := db.GetConnection()
     if err != nil {
@@ -40,19 +40,22 @@ func GetList(query interface{}) (*[]Timer, error) {
     }
     defer session.Close()
 
+    collectionName := stringHelper.GetCappedCollectionNameForApiKey(apiKey)
+
     db  := session.DB(config.DBName)
-    dbc := db.C(config.DBTimers)
+    dbc := db.C(collectionName)
 
     // Query All
     var results []Timer
 
     //TODO add criteria builder
-    err = dbc.Find(query).Sort("-_id").Limit(100).All(&results)
+    criteria["apikey"] = apiKey
+    err = dbc.Find(criteria).Sort("-_id").Limit(100).All(&results)
 
     return &results, err
 }
 
-func Aggregate(criteria interface{}, groupBy map[string]interface{}, sortBy string) (*[]Stat, error) {
+func Aggregate(apiKey string, criteria map[string]interface{}, groupBy map[string]interface{}, sortBy string) (*[]Stat, error) {
     // @TODO: add validation and Error Handling
     session, err := db.GetConnection()
     if err != nil {
@@ -60,8 +63,10 @@ func Aggregate(criteria interface{}, groupBy map[string]interface{}, sortBy stri
     }
     defer session.Close()
 
+    collectionName := stringHelper.GetCappedCollectionNameForApiKey(apiKey)
+
     db  := session.DB(config.DBName)
-    dbc := db.C(config.DBTimers)
+    dbc := db.C(collectionName)
 
     var results []Stat
 
@@ -79,6 +84,8 @@ func Aggregate(criteria interface{}, groupBy map[string]interface{}, sortBy stri
         groupparam[i] = "$" + i
         grouplist[i] = bson.M{"$first": "$" + i}
     }
+
+    criteria["apikey"] = apiKey
 
     grouplist["_id"] = groupparam
     group := bson.M{"$group": grouplist}

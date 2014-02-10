@@ -181,9 +181,8 @@ func lastHandler(w http.ResponseWriter, r *http.Request) {
     user.GetCurrentUser(r)
 
     criteria := makeCriteria(r.FormValue("filter"))
-    criteria["apikey"] = user.ApiKey
 
-    results, err := timer.GetList(criteria);
+    results, err := timer.GetList(user.ApiKey, criteria);
     if err != nil {
       PRFLRLogger.Error(err)
       return
@@ -209,7 +208,6 @@ func aggregateHandler(w http.ResponseWriter, r *http.Request) {
 
     // define criteria for current user
     criteria := makeCriteria(r.FormValue("filter"))
-    criteria["apikey"] = user.ApiKey
 
     // filling in GroupBy parameter
     q := strings.Split(r.FormValue("groupby"), ",")
@@ -220,7 +218,7 @@ func aggregateHandler(w http.ResponseWriter, r *http.Request) {
         groupBy["timer"] = 1
     }
 
-    results, err := timer.Aggregate(criteria, groupBy, sortBy)
+    results, err := timer.Aggregate(user.ApiKey, criteria, groupBy, sortBy)
     if err != nil {
         PRFLRLogger.Error(err)
         return
