@@ -98,6 +98,9 @@ func Aggregate(apiKey string, criteria map[string]interface{}, groupBy map[strin
     return &results, err
 }
 
+/**
+ * @TODO: use ApiKey for CollectionName
+ */
 func SetApiKey(oldApiKey, newApiKey string) error {
     // @TODO: add validation and Error Handling
     session, err := db.GetConnection()
