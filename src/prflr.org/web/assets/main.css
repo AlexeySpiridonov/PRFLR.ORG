@@ -72,3 +72,5 @@ div.auth, div.recovery, div.register {font-style: Italic; font-size: 1.1em; widt
 .userPanelLogout {font-size: 12px}
 
 #registerForm input, #recoveryForm input, #registerForm textarea {padding: 5px; width: 300px;font-size: 1em}
+
+.nav label {height:397px!important;}
