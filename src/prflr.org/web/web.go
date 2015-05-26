@@ -16,13 +16,19 @@ import (
     "strings"
 )
 
+// compile all templates and cache them
+//var templates = template.Must(template.ParseGlob(config.BaseDir + "web/assets/landing/*.html"))
+
 func Start() {
     /* Starting Web Server */
     http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(config.BaseDir + "web/assets"))))
+    http.Handle("/assets/landing/", http.StripPrefix("/assets/landing/", http.FileServer(http.Dir(config.BaseDir + "web/assets/landing"))))
     http.Handle("/favicon.ico", http.FileServer(http.Dir(config.BaseDir + "web/assets"))) //cool code for favicon! :) it's very important!
     http.HandleFunc("/last/", lastHandler)
     http.HandleFunc("/aggregate/", aggregateHandler)
-    http.HandleFunc("/register/", registerHandler)
+    //http.HandleFunc("/register/", registerHandler)
+    http.HandleFunc("/signup/", registerHandler)
+    http.HandleFunc("/signin/", loginHandler)
     http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
     http.HandleFunc("/passwordRecovered/", passwordRecoveredHandler)
     http.HandleFunc("/thankyou/", thankyouHandler)
@@ -48,7 +54,11 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
         }
 
         // ok, no user then show Auth Page
-        t, err := template.ParseFiles(config.BaseDir + "web/assets/auth.html")
+        t, err := template.ParseFiles(
+            config.BaseDir + "web/assets/index.html",
+            config.BaseDir + "web/assets/landing/header.html",
+            config.BaseDir + "web/assets/landing/footer.html",
+        )
         if err != nil {
             PRFLRLogger.Error(err)
             return
@@ -103,7 +113,44 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     // ok, no user then show Auth Page
-    t, err := template.ParseFiles(config.BaseDir + "web/assets/register.html")
+    t, err := template.ParseFiles(
+        config.BaseDir + "web/assets/register.html",
+        config.BaseDir + "web/assets/landing/header.html",
+        config.BaseDir + "web/assets/landing/footer.html",
+    )
+    if err != nil {
+        PRFLRLogger.Error(err)
+        return
+    }
+
+    t.Execute(w, tplVars)
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+    // check for Auth Form Submit
+    email := r.PostFormValue("email")
+    pass  := r.PostFormValue("password")
+
+    loginAttempt := r.PostFormValue("login")
+
+    tplVars := make(map[string]interface{})
+
+    if len(loginAttempt) > 0 {
+        // auth successful?..
+        loginErr := auth(email, pass, w)
+        if loginErr == nil {
+            http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
+        }
+
+        tplVars["loginErr"] = loginErr
+    }
+
+    // ok, no user then show Auth Page
+    t, err := template.ParseFiles(
+        config.BaseDir + "web/assets/login.html",
+        config.BaseDir + "web/assets/landing/header.html",
+        config.BaseDir + "web/assets/landing/footer.html",
+    )
     if err != nil {
         PRFLRLogger.Error(err)
         return
@@ -129,7 +176,11 @@ func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
         tplVars["recoveryErr"]  = recoveryErr
     }
 
-    t, err := template.ParseFiles(config.BaseDir + "web/assets/forgotPassword.html")
+    t, err := template.ParseFiles(
+        config.BaseDir + "web/assets/forgotPassword.html",
+        config.BaseDir + "web/assets/landing/header.html",
+        config.BaseDir + "web/assets/landing/footer.html",
+    )
     if err != nil {
         PRFLRLogger.Error(err)
         return
@@ -138,12 +189,20 @@ func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
     t.Execute(w, tplVars)
 }
 func passwordRecoveredHandler(w http.ResponseWriter, r *http.Request) {
-    t, _ := template.ParseFiles(config.BaseDir + "web/assets/passwordRecovered.html")
+    t, _ := template.ParseFiles(
+        config.BaseDir + "web/assets/passwordRecovered.html",
+        config.BaseDir + "web/assets/landing/header.html",
+        config.BaseDir + "web/assets/landing/footer.html",
+    )
     t.Execute(w, nil)
 }
 
 func thankyouHandler(w http.ResponseWriter, r *http.Request) {
-    t, _ := template.ParseFiles(config.BaseDir + "web/assets/thankyou.html")
+    t, _ := template.ParseFiles(
+        config.BaseDir + "web/assets/thankyou.html",
+        config.BaseDir + "web/assets/landing/header.html",
+        config.BaseDir + "web/assets/landing/footer.html",
+    )
     t.Execute(w, nil)
 }
 

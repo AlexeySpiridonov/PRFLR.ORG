@@ -1,6 +1,6 @@
 body {font-family: Times New Roman;}
 
-div.auth, div.recovery, div.register {font-style: Italic; font-size: 1.1em; width: 1000px;margin: 0 auto}
+div.auth, div.recovery, div.register, div.login {font-style: Italic; font-size: 1.1em; width: 1000px;margin: 0 auto}
 
 
 .spacer {height: 100px}

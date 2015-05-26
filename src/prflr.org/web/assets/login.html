@@ -1,11 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
-        <title>Join PRFLR</title>
+        <title>Sign in to PRFLR</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link href="/assets/landing/global.min.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/assets/jquery-1.7.2.min.js"></script>
-        <script type="text/javascript" src="/assets/prflr.js"></script>
         <script type="text/javascript" src="https://cdn.flurry.com/js/flurry.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
@@ -17,22 +16,24 @@
 
         <!-- HEADER -->
         {{template "header"}}
-
+    
         <!-- CONTENT -->
         <div class="content">
             <div class="container">
-                <h1>Sign up</h1>
-                <font color="red">{{.registerErr}}</font>
-                <form action="" method="POST" name="registerForm" id="registerForm" onsubmit="$('#submitButton').html('Please wait...').prop('disabled', true);" >
-                    <input class="text" value="{{.name}}" type="text" name="name" autocomplete="off" placeholder="Your Full Name" /><br/><br/>
+                <h1>Sign in</h1>
+                <font color="red">{{.loginErr}}</font>
+                <form action="" method="POST" name="loginForm" id="loginForm" onsubmit="$('#submitButton').html('Please wait...').prop('disabled', true);" >
                     <input class="text" value="{{.email}}" type="text" name="email" autocomplete="off" placeholder="Email" /><br/><br/>
-                    <input class="text" value="{{.pass}}" type="password" name="pass" autocomplete="off" placeholder="Password" style="margin-bottom:6px" /><br/>
-                    <input class="text" value="{{.confirm_pass}}" type="password" name="confirm_pass" autocomplete="off" placeholder="Confirm password" /><br/><br/>
-                    <textarea placeholder="A few words about yourself" name="info" rows="5" cols="50">{{.info}}</textarea>
-                    <br/><br/>
-                    <input type="hidden" name="register" value="register" />
+                    <input class="text" value="{{.password}}" type="password" name="password" autocomplete="off" placeholder="Password" /><br/><br/>
+                    <input type="hidden" name="login" value="login" />
                     <button id="submitButton" type="submit">Submit</button>
                 </form>
+
+                <br/><br/><br/>
+
+                <div>
+                    <a href="/forgotPassword">Forgot your password?</a><br/>
+                </div>
             </div>
         </div>
 
