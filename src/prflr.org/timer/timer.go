@@ -17,6 +17,7 @@ type Timer struct {
     Time   float32
     Info   string
     Apikey string
+    Timestamp int64
 }
 
 /**

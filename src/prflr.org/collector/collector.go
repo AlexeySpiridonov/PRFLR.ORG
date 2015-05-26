@@ -6,6 +6,7 @@ import (
     "prflr.org/db"
     "prflr.org/PRFLRLogger"
     "net"
+    "time"
     "strconv"
     "strings"
     "errors"
@@ -41,6 +42,8 @@ func Start() {
 
 /* UDP Handlers */
 func saveMessage(msg string) {
+    nowMS := time.Now().UnixNano() / int64(time.Millisecond)
+
     timer, err := parseStringToTimer(msg)
 
     // Couldn't Parse? Wrong Format? Just skip it!!!
@@ -51,6 +54,9 @@ func saveMessage(msg string) {
 
     // DO NOT UNCOMMENT ON PROD!!! Slows REALLY MUCH!!!
     // PRFLRLogger.Debug("Saving timer: " + msg)
+
+    // save Timestamp
+    timer.Timestamp = (nowMS - int64(timer.Time)) / 1000 // format to Seconds
 
     err = timer.Save()
     if err != nil {
@@ -104,5 +110,5 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
     }
 
     //TODO add check for apikey and crop for fields lenght
-    return &timer.Timer{fields[0], fields[1], fields[2], float32(time), fields[4], fields[5]}, nil
+    return &timer.Timer{Thrd: fields[0], Src: fields[1], Timer: fields[2], Time: float32(time), Info: fields[4], Apikey: fields[5]}, nil
 }
