@@ -4,7 +4,7 @@ package config
  * Global variables
  */
 const (
-    BaseDir                 = "src/prflr.org/"
+    BaseDir                 = ""
     UserCookieName          = "prflr.User.ApiKey"
     DomainName              = "prflr.loc"
 
@@ -19,8 +19,8 @@ const (
     UDPPort                 = ":4000"
     HTTPPort                = ":8080"
 
-    CappedCollectionMaxByte = 450000000 // 450Mb
-    CappedCollectionMaxDocs = 2000000   // 2M timers   
+    CappedCollectionMaxByte = 200000000 // 200Mb
+    CappedCollectionMaxDocs = 1000000   // 1M timers   
 
     RegisterEmailFrom       = "robot@prflr.org"
     RegisterEmailTo         = "info@prflr.org"
