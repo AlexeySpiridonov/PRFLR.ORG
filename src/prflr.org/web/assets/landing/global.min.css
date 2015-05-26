@@ -7170,3 +7170,6 @@ h3.centered span:before {
   min-height: 400px;
   padding-top: 50px;
 }
+.content .container .text {
+  width: 325px;
+}
