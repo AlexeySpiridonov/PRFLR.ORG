@@ -1,17 +1,27 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title></title>
+    <title>PRFLR</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script type="text/javascript" src="/assets/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="/assets/prflr.js"></script>
     <script type="text/javascript" src="https://cdn.flurry.com/js/flurry.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="/assets/graph.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/main.css" />
+    <script>
+        var tsMin = {{.GraphTSMin}}
+        var tsMax = {{.GraphTSMax}}
+
+        var medianStats = eval("("+{{.GraphMedianStatsJSON}}+")")
+        var avgStats    = eval("("+{{.GraphAvgStatsJSON}}+")")
+        var rpsStats    = eval("("+{{.GraphRPSStatsJSON}}+")")
+    </script>
 </head>
 <body>
     <div>
         <div class="userPanel">
-            <div class="userPanelName">{{.Name}}</div>
+            <div class="userPanelName">{{.user.Name}}</div>
             <div class="userPanelLogout"><a href="/logout" onClick="return Logout();">Logout</a>&nbsp;</div>
         </div>
         <table>
@@ -23,7 +33,9 @@
                     <a href="#aggregate" class="tabselected">Statistic</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#last">Raw Timers</a>
-                    <!-- | <a href="#slow">SlowTop</a> | <a href="#source">Sources</a> | <a href="#time">TimeGraph</a>-->
+                    <!-- | <a href="#slow">SlowTop</a> | <a href="#source">Sources</a> | -->
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#graph">Time Graph</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#settings">Settings</a>
                     
@@ -133,13 +145,19 @@
                 </form>
             </div> <!-- END OF agg -->
 
+            <!-- GRAPH -->
+            <div id="graph" class="profiler_block">
+                <h1>Time Graph</h1>
+                <div id="graph_container"></div>
+            </div> <!-- END OF GRAPH -->
+
             <!-- SETTINGS -->
             <div id="settings" class="profiler_block">
                 <h1>Settings</h1>
-                <b>Your Name</b> {{.Name}}</br>
-                <b>Email</b> {{.Email}} </br>
-                <b>Password</b> {{.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
-                <b>ApiKey</b> {{.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
+                <b>Your Name</b> {{.user.Name}}</br>
+                <b>Email</b> {{.user.Email}} </br>
+                <b>Password</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
+                <b>ApiKey</b> {{.user.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
 
             </div> <!-- END OF settings -->
 

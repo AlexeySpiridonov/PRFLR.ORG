@@ -5,6 +5,7 @@ import(
     "prflr.org/config"
     "prflr.org/db"
     "labix.org/v2/mgo/bson"
+    "strconv"
 )
 
 /**
@@ -26,11 +27,23 @@ type Timer struct {
 type Stat struct {
     Src   string
     Timer string
+    Timestamp int64
     Count int
     Total float32
     Min   float32
     Avg   float32
     Max   float32
+}
+
+/**
+ * UI Graph Struct 
+ */
+type Graph struct {
+    Min    int64
+    Max    int64
+    Median map[string]int
+    Avg    map[string]int
+    RPS    map[string]int
 }
 
 func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
@@ -97,6 +110,68 @@ func Aggregate(apiKey string, criteria map[string]interface{}, groupBy map[strin
     err = dbc.Pipe(aggregate).All(&results)
 
     return &results, err
+}
+
+func FormatGraph(apiKey string) (*Graph, error) {
+    // @TODO: add validation and Error Handling
+    session, err := db.GetConnection()
+    if err != nil {
+        return nil, err
+    }
+    defer session.Close()
+
+    collectionName := stringHelper.GetCappedCollectionNameForApiKey(apiKey)
+
+    db  := session.DB(config.DBName)
+    dbc := db.C(collectionName)
+
+    var results []Stat
+
+    // group params
+    grouplist  := map[string]interface{} {
+        "count": bson.M{"$sum": 1},
+        "total": bson.M{"$sum": "$time"},
+        "avg"  : bson.M{"$avg": "$time"},
+        "timestamp": bson.M{"$first": "$timestamp"},
+        "_id": map[string]string {
+            "timestamp": "$timestamp",
+        },
+    }
+
+    // criteria
+    criteria := map[string]string {
+        "apikey": apiKey,
+    }
+
+    group := bson.M{"$group": grouplist}
+    sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
+    match := bson.M{"$match": criteria}
+    aggregate := []bson.M{match, group, sort}
+
+    err = dbc.Pipe(aggregate).All(&results)
+    if err != nil {
+        return nil, err
+    }
+
+    graph := &Graph{
+        Avg: make(map[string]int), 
+        RPS: make(map[string]int),
+        Median: make(map[string]int),
+        Min: 0,
+        Max: 0,
+    }
+    for _, stat := range results {
+        key := "key_" + strconv.FormatInt(stat.Timestamp, 10)
+        graph.Avg[key] = int(stat.Avg)
+        graph.RPS[key] = int(stat.Count)
+    }
+
+    if len(results) > 0 {
+        graph.Min = results[0].Timestamp
+        graph.Max = results[len(results)-1].Timestamp
+    }
+
+    return graph, nil
 }
 
 /**

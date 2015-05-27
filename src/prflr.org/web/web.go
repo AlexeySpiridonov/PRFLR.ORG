@@ -41,6 +41,8 @@ func Start() {
 
 /* HTTP Handlers */
 func mainHandler(w http.ResponseWriter, r *http.Request) {
+    tplVars := make(map[string]interface{})
+
     user := &user.User{}
     if err := user.GetCurrentUser(r); err != nil {
         // check for Auth Form Submit
@@ -63,8 +65,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
             PRFLRLogger.Error(err)
             return
         }
-
-        tplVars := make(map[string]interface{})
+        
         tplVars["loginErr"] = loginErr
 
         t.Execute(w, tplVars)
@@ -75,7 +76,27 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
         if err != nil {
             PRFLRLogger.Error(err)
         }
-        t.Execute(w, user)
+
+        tplVars["user"] = user
+
+        /*tplVars["GraphTSMin"] = 1432552467
+        tplVars["GraphTSMax"] = 1432552888
+        tplVars["GraphMedianStatsJSON"] = "{\"key_1432552467\": 110, \"key_1432552839\": 1035, \"key_1432552888\": 914}"
+        tplVars["GraphAvgStatsJSON"] = "{\"key_1432552467\": 130, \"key_1432552839\": 1235, \"key_1432552888\": 814}"
+        tplVars["GraphRPSStatsJSON"] = "{\"key_1432552467\": 6, \"key_1432552839\": 135, \"key_1432552888\": 73}"*/
+
+        graph, _ := timer.FormatGraph(user.ApiKey)
+
+        tplVars["GraphTSMin"] = graph.Min
+        tplVars["GraphTSMax"] = graph.Max
+        GraphMedianStatsJSON, _ := json.Marshal(graph.Median)
+        GraphAvgStatsJSON, _    := json.Marshal(graph.Avg)
+        GraphRPSStatsJSON, _    := json.Marshal(graph.RPS)
+        tplVars["GraphMedianStatsJSON"] = string(GraphMedianStatsJSON)
+        tplVars["GraphAvgStatsJSON"]    = string(GraphAvgStatsJSON)
+        tplVars["GraphRPSStatsJSON"]    = string(GraphRPSStatsJSON)
+
+        t.Execute(w, tplVars)
     }
 }
 
