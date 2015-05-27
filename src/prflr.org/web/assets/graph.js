@@ -15,8 +15,7 @@ function drawGraph() {
     var previousUsersAmount = 0
     for (var i = tsMin; i <= tsMax; i++) {
         var iDate = new Date(i*1000)
-
-        data.setValue(j, 0, iDate.getHours() + ":" + iDate.getMinutes() + ":" + iDate.getSeconds()); // ts
+        var hasData = false
 
         key = "key_" + i
         /*if (typeof(usersStats) != "undefined" && typeof(usersStats[key]) != "undefined") {
@@ -27,13 +26,21 @@ function drawGraph() {
         }*/
         if (typeof(rpsStats) != "undefined" && typeof(rpsStats[key]) != "undefined") {
             data.setValue(j, 1, rpsStats[key]);
+            hasData = true;
         }
         if (typeof(medianStats) != "undefined" && typeof(medianStats[key]) != "undefined") {
             data.setValue(j, 2, medianStats[key]);
+            hasData = true;
         }
         if (typeof(avgStats) != "undefined" && typeof(avgStats[key]) != "undefined") {
             data.setValue(j, 3, avgStats[key]);
+            hasData = true;
         }
+
+        if (hasData) {
+            data.setValue(j, 0, iDate.getHours() + ":" + iDate.getMinutes() + ":" + iDate.getSeconds()); // ts
+        }
+
         j++
     }
 
