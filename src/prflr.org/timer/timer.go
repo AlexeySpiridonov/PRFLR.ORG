@@ -141,6 +141,7 @@ func FormatGraph(apiKey string) (*Graph, error) {
     // criteria
     criteria := map[string]string {
         "apikey": apiKey,
+        "src": "node1.mag.ndmsystems.com",
     }
 
     group := bson.M{"$group": grouplist}
