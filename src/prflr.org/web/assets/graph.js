@@ -37,9 +37,9 @@ function drawGraph() {
             hasData = true;
         }
 
-        if (hasData) {
-            data.setValue(j, 0, iDate.getHours() + ":" + iDate.getMinutes() + ":" + iDate.getSeconds()); // ts
-        }
+        //if (hasData) {
+        data.setValue(j, 0, iDate.getHours() + ":" + iDate.getMinutes() + ":" + iDate.getSeconds()); // ts
+        //}
 
         j++
     }

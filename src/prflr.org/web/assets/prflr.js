@@ -1,4 +1,4 @@
-function start(){ 
+function start(){
 	$.ajaxSetup({cache: false}); // turn off ajax cache
 
 	// Menu Item Handlers
@@ -60,6 +60,21 @@ function start(){
 		assignFilterChunkValue('*', '*');
 		renderDataGrid(getCurrentMenuSelector());
 	});
+
+    // Settings
+    //alert($('#removeDataButton'))
+    $('#removeDataButton').click(function(){
+        if (!confirm("It will remove all stored data. Are you sure?")) {
+            return false;
+        }
+
+        $(this).html("Removing...")
+
+        $.get('/removeData', function(){
+            $('#removeDataButton').html("Remove data")
+            alert('Successfully!')
+        });
+    })
 }
 
 function clickMenuItem(item)

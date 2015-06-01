@@ -5,7 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script type="text/javascript" src="/assets/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="/assets/prflr.js"></script>
+    <!--
     <script type="text/javascript" src="https://cdn.flurry.com/js/flurry.js"></script>
+    -->
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript" src="/assets/graph.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/main.css" />
@@ -159,6 +161,16 @@
                 <b>Password</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
                 <b>ApiKey</b> {{.user.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
 
+                <br/><br/><br/>
+                <div style="width:50%;border-bottom:1px solid black"></div>
+                <br/><br/>
+
+                <button id="removeDataButton">Remove data</button><br/><br/>
+                <div id="removeDataButtonHint">
+                    * Clicking this button will remove currently stored Timers (data you have sent to PRFLR).<br/>
+                    It might be helpful if you are improving your application performance and previously stored Timers would mess up the result.
+                </div>
+
             </div> <!-- END OF settings -->
 
         </div>
@@ -182,13 +194,14 @@ var inProgress    = false;
 var lineBarLength = 265;
 
 $(document).ready(function(){
-    FlurryAgent.startSession('VG4NW39X4ZYWBYSNNT5P');
+    //FlurryAgent.startSession('VG4NW39X4ZYWBYSNNT5P');
     start();
 });
 
 </script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
+/*
 (function (d, w, c) {
     (w[c] = w[c] || []).push(function() {
         try {
@@ -211,6 +224,7 @@ $(document).ready(function(){
         d.addEventListener("DOMContentLoaded", f, false);
     } else { f(); }
 })(document, window, "yandex_metrika_callbacks");
+*/
 </script>
 <noscript><div><img src="//mc.yandex.ru/watch/24124810" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->

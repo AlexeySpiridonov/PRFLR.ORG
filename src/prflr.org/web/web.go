@@ -13,6 +13,9 @@ import (
     "net/http"
     "errors"
     "fmt"
+    //"io"
+    "time"
+    "strconv"
     "strings"
 )
 
@@ -33,6 +36,7 @@ func Start() {
     http.HandleFunc("/passwordRecovered/", passwordRecoveredHandler)
     http.HandleFunc("/thankyou/", thankyouHandler)
     http.HandleFunc("/resetApiKey/", resetApiKeyHandler)
+    http.HandleFunc("/removeData/", removeDataHandler)
     http.HandleFunc("/logout/", logoutHandler)
     http.HandleFunc("/", mainHandler)
 
@@ -247,6 +251,15 @@ func resetApiKeyHandler(w http.ResponseWriter, r *http.Request) {
     http.Redirect(w, r, urlHelper.GenerateUrl("#settings"), http.StatusFound)
 }
 
+func removeDataHandler(w http.ResponseWriter, r *http.Request) {
+    user := &user.User{}
+    if err := user.GetCurrentUser(r); err == nil {
+        //io.WriteString(w, "User: " + user.Email)
+
+        user.RemovePrivateStorageData()
+    }
+}
+
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
     user := &user.User{}
 
@@ -396,7 +409,7 @@ func sendRegistrationEmail(user *user.User) error {
     "Tutorials: https://github.com/PRFLR/SDK/wiki\n\n"+
 
     "Good luck in neverending fight for milliseconds!\n"+
-    "PRFLR Team © 2014, info@prflr.org\n\n"+
+    "PRFLR Team © "+strconv.Itoa(time.Now().Year())+", info@prflr.org\n\n"+
     "Join our G+ Community: http://goo.gl/AqJV4V"
 
     // sending to the User
@@ -436,7 +449,7 @@ func sendRecoveryEmail(user *user.User) error {
     "Please try to login at: http://prflr.org\n\n"+
 
     "Good luck in neverending fight for milliseconds!\n"+
-    "PRFLR Team © 2014, info@prflr.org\n\n"+
+    "PRFLR Team © "+strconv.Itoa(time.Now().Year())+", info@prflr.org\n\n"+
     "Join our G+ Community: http://goo.gl/AqJV4V"
 
     // sending to the User
@@ -454,4 +467,3 @@ func sendRecoveryEmail(user *user.User) error {
 
     return nil
 }
-

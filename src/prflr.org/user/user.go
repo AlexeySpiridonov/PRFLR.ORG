@@ -267,3 +267,29 @@ func (user *User) CreatePrivateStorage() {
         PRFLRLogger.Error(err)
     }
 }
+
+func (user *User) RemovePrivateStorage() {
+    collectionName := stringHelper.GetCappedCollectionNameForApiKey(user.ApiKey)
+
+    session, err := db.GetConnection()
+    if err != nil {
+        PRFLRLogger.Error(err)
+        return
+        //return nil, err
+    }
+    defer session.Close()
+
+    // creating capped collection
+    err = session.DB(config.DBName).C(collectionName).DropCollection()
+    if err != nil {
+        PRFLRLogger.Error(err)
+    }
+}
+
+func (user *User) RemovePrivateStorageData() {
+    // remove current
+    user.RemovePrivateStorage()
+
+    // create a new one
+    user.CreatePrivateStorage()
+}
