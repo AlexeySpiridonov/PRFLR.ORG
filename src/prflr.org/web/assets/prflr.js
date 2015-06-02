@@ -36,6 +36,13 @@ function start(){
 	    return false;
 	});
 
+    // Special for Graph
+    $('#tab_menu a[href="#graph"]').click(function(){
+        $('#refresh_graph_button').click(function(){
+            renderGraph('#graph')
+        }).click()
+    })
+
 	// URL anchor handlers
 	var hash = window.location.hash.replace('#', '');
 	if (hash.length > 0) {
@@ -147,6 +154,35 @@ function formatNumber(number)
         number = Math.floor(number);
     }
     return round(number) + label;
+}
+
+function renderGraph(selector)
+{
+    var elem = $(selector);
+    var container = $('#graph_container')
+    var button = elem.find('#refresh_graph_button');
+    var query  = "/" + elem.attr('id') + "/?" + elem.find(':input').serialize();
+
+    var filter = $('input[name=filter]:visible').val();
+    filter     = typeof(filter) != 'undefined' && filter.length > 0 ? filter : '*/*/*/*';
+    window.location.hash = "#"+getCurrentMenuSelector().replace("#", '')+"|"+filter;
+
+    inProgress = true; // set to true (C.O.)  (^_^)
+    elem.find(':input').attr('disabled', 'disabled');
+
+    container.html("Loading...")
+    button.css('color', 'grey').html('Loading...');
+    $.getJSON(query, function(data){
+        drawGraph(data)
+    }).complete(function(){
+        //grid.css('opacity', 1);
+        button.css('color', 'black').html('Refresh');
+        elem.find(':input').attr('disabled', null);
+
+        initProfilerItemsClickHandler();
+
+        inProgress = false;
+    });
 }
 
 function renderDataGrid(selector, checkEmpty)

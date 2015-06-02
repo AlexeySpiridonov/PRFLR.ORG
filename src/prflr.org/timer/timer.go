@@ -112,7 +112,7 @@ func Aggregate(apiKey string, criteria map[string]interface{}, groupBy map[strin
     return &results, err
 }
 
-func FormatGraph(apiKey string) (*Graph, error) {
+func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error) {
     // @TODO: add validation and Error Handling
     session, err := db.GetConnection()
     if err != nil {
@@ -139,10 +139,11 @@ func FormatGraph(apiKey string) (*Graph, error) {
     }
 
     // criteria
-    criteria := map[string]string {
+    criteria["apikey"] = apiKey
+    /*criteria := map[string]string {
         "apikey": apiKey,
         "src": "node1.mag.ndmsystems.com",
-    }
+    }*/
 
     group := bson.M{"$group": grouplist}
     sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}

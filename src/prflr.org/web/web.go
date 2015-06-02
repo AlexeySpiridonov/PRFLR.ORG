@@ -29,6 +29,7 @@ func Start() {
     http.Handle("/favicon.ico", http.FileServer(http.Dir(config.BaseDir + "web/assets"))) //cool code for favicon! :) it's very important!
     http.HandleFunc("/last/", lastHandler)
     http.HandleFunc("/aggregate/", aggregateHandler)
+    http.HandleFunc("/graph/", graphHandler)
     //http.HandleFunc("/register/", registerHandler)
     http.HandleFunc("/signup/", registerHandler)
     http.HandleFunc("/signin/", loginHandler)
@@ -83,13 +84,13 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
         tplVars["user"] = user
 
-        /*tplVars["GraphTSMin"] = 1432552467
+        tplVars["GraphTSMin"] = 1432552467
         tplVars["GraphTSMax"] = 1432552888
         tplVars["GraphMedianStatsJSON"] = "{\"key_1432552467\": 110, \"key_1432552839\": 1035, \"key_1432552888\": 914}"
         tplVars["GraphAvgStatsJSON"] = "{\"key_1432552467\": 130, \"key_1432552839\": 1235, \"key_1432552888\": 814}"
-        tplVars["GraphRPSStatsJSON"] = "{\"key_1432552467\": 6, \"key_1432552839\": 135, \"key_1432552888\": 73}"*/
+        tplVars["GraphRPSStatsJSON"] = "{\"key_1432552467\": 6, \"key_1432552839\": 135, \"key_1432552888\": 73}"
 
-        graph, _ := timer.FormatGraph(user.ApiKey)
+        /*graph, _ := timer.FormatGraph(user.ApiKey)
 
         tplVars["GraphTSMin"] = graph.Min
         tplVars["GraphTSMax"] = graph.Max
@@ -98,7 +99,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
         GraphRPSStatsJSON, _    := json.Marshal(graph.RPS)
         tplVars["GraphMedianStatsJSON"] = string(GraphMedianStatsJSON)
         tplVars["GraphAvgStatsJSON"]    = string(GraphAvgStatsJSON)
-        tplVars["GraphRPSStatsJSON"]    = string(GraphRPSStatsJSON)
+        tplVars["GraphRPSStatsJSON"]    = string(GraphRPSStatsJSON)*/
 
         t.Execute(w, tplVars)
     }
@@ -324,6 +325,35 @@ func aggregateHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     // Output JSON!
+    fmt.Fprintf(w, "%s", j)
+}
+
+func graphHandler(w http.ResponseWriter, r *http.Request) {
+    user := &user.User{}
+    user.GetCurrentUser(r)
+
+    // define criteria for current user
+    criteria := makeCriteria(r.FormValue("filter"))
+
+    graph, _ := timer.FormatGraph(user.ApiKey, criteria)
+
+    /*tplVars := make(map[string]interface{})
+
+    tplVars["GraphTSMin"] = graph.Min
+    tplVars["GraphTSMax"] = graph.Max
+    GraphMedianStatsJSON, _ := json.Marshal(graph.Median)
+    GraphAvgStatsJSON, _    := json.Marshal(graph.Avg)
+    GraphRPSStatsJSON, _    := json.Marshal(graph.RPS)
+    tplVars["GraphMedianStatsJSON"] = string(GraphMedianStatsJSON)
+    tplVars["GraphAvgStatsJSON"]    = string(GraphAvgStatsJSON)
+    tplVars["GraphRPSStatsJSON"]    = string(GraphRPSStatsJSON)*/
+
+    j, err := json.Marshal(graph)
+    if err != nil {
+        PRFLRLogger.Error(err)
+        return
+    }
+
     fmt.Fprintf(w, "%s", j)
 }
 

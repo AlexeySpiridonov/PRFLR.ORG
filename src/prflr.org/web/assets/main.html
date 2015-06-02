@@ -12,12 +12,13 @@
     <script type="text/javascript" src="/assets/graph.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/main.css" />
     <script>
-        var tsMin = {{.GraphTSMin}}
+        /*var tsMin = {{.GraphTSMin}}
         var tsMax = {{.GraphTSMax}}
 
         var medianStats = eval("("+{{.GraphMedianStatsJSON}}+")")
         var avgStats    = eval("("+{{.GraphAvgStatsJSON}}+")")
         var rpsStats    = eval("("+{{.GraphRPSStatsJSON}}+")")
+        */
     </script>
 </head>
 <body>
@@ -149,8 +150,45 @@
 
             <!-- GRAPH -->
             <div id="graph" class="profiler_block">
-                <h1>Time Graph</h1>
-                <div id="graph_container"></div>
+                <!--<h1>Time Graph</h1>-->
+                <form action="/graph" method="GET" onsubmit="$('#refresh_graph_button').click();return false">
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                        <tr>
+                            <td class='r0 f15'></td>
+                            <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
+                            <td class="r2 f30"></td>
+                            <td class="r3"></td>
+                            <td class="r4 f18">
+                                Time<br/>&nbsp;
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="r0 resetFilter">#>&nbsp;</td>
+                            <td>
+                                <input name="filter" class='cp' value="*/*/*/*" />
+                            </td>
+                            <td><button id="refresh_graph_button">Refresh</button></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='r0'></td>
+                            <td></td>
+                            <td>&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='b0'></td>
+                            <td colspan="4">
+                                <!--<table class="m profiler_grid t100" border="0" cellpadding="0" cellspacing="0"></table>-->
+                                <div id="graph_container"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <!--<div id="graph_container"></div>-->
             </div> <!-- END OF GRAPH -->
 
             <!-- SETTINGS -->

@@ -1,6 +1,6 @@
 google.load('visualization', '1.1', {packages: ['corechart', 'imagelinechart']});
 
-function drawGraph() {
+function drawGraph(graphData) {
     // Graph
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Date');
@@ -9,11 +9,11 @@ function drawGraph() {
     data.addColumn('number', 'Median');
     data.addColumn('number', 'Avg');
 
-    data.addRows(tsMax - tsMin + 1);
+    data.addRows(graphData.Max - graphData.Min + 1);
 
     var j = 0
     var previousUsersAmount = 0
-    for (var i = tsMin; i <= tsMax; i++) {
+    for (var i = graphData.Min; i <= graphData.Max; i++) {
         var iDate = new Date(i*1000)
         var hasData = false
 
@@ -24,16 +24,16 @@ function drawGraph() {
         } else {
             data.setValue(j, 1, previousUsersAmount);
         }*/
-        if (typeof(rpsStats) != "undefined" && typeof(rpsStats[key]) != "undefined") {
-            data.setValue(j, 1, rpsStats[key]);
+        if (typeof(graphData.RPS) != "undefined" && typeof(graphData.RPS[key]) != "undefined") {
+            data.setValue(j, 1, graphData.RPS[key]);
             hasData = true;
         }
-        if (typeof(medianStats) != "undefined" && typeof(medianStats[key]) != "undefined") {
-            data.setValue(j, 2, medianStats[key]);
+        if (typeof(graphData.Median) != "undefined" && typeof(graphData.Median[key]) != "undefined") {
+            data.setValue(j, 2, graphData.Median[key]);
             hasData = true;
         }
-        if (typeof(avgStats) != "undefined" && typeof(avgStats[key]) != "undefined") {
-            data.setValue(j, 3, avgStats[key]);
+        if (typeof(graphData.Avg) != "undefined" && typeof(graphData.Avg[key]) != "undefined") {
+            data.setValue(j, 3, graphData.Avg[key]);
             hasData = true;
         }
 
@@ -49,4 +49,4 @@ function drawGraph() {
   }
 
   // Start it when the page is ready
-  google.setOnLoadCallback(drawGraph);
+  //google.setOnLoadCallback(drawGraph);
