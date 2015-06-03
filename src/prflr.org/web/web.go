@@ -342,7 +342,7 @@ func graphHandler(w http.ResponseWriter, r *http.Request) {
 
     if startTimeErr == nil && endTimeErr == nil {
         criteria["timestamp"] = &bson.M{"$gte": startTime.Unix(), "$lte": endTime.Unix()}
-        fmt.Println(startTime, endTime)
+        //fmt.Println(startTime, endTime)
     } else if startTimeErr == nil {
         criteria["timestamp"] = &bson.M{"$gte": startTime.Unix()}
     } else if endTimeErr == nil {
@@ -351,7 +351,7 @@ func graphHandler(w http.ResponseWriter, r *http.Request) {
 
     graph, err := timer.FormatGraph(user.ApiKey, criteria)
     if err != nil {
-        fmt.Println(err)
+        //fmt.Println(err)
         graph = &timer.Graph{}
     }
 
