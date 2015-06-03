@@ -194,10 +194,11 @@
             <!-- SETTINGS -->
             <div id="settings" class="profiler_block">
                 <h1>Settings</h1>
-                <b>Your Name</b> {{.user.Name}}</br>
-                <b>Email</b> {{.user.Email}} </br>
-                <b>Password</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
-                <b>ApiKey</b> {{.user.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
+                <b>Your Name:</b> {{.user.Name}}</br>
+                <b>Email:</b> {{.user.Email}} </br>
+                <b>Password:</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
+                <b>ApiKey:</b> {{.user.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
+                <b>Storage:</b> 1 000 000 timers / 200Mb. To increase this storage please contact us (info@prlr.org). This paid option is $30 a month.</br>
 
                 <br/><br/><br/>
                 <div style="width:50%;border-bottom:1px solid black"></div>
@@ -227,16 +228,7 @@
     </center>
     <br/><br/>
 </center>
-<script type="text/javascript">
-var inProgress    = false;
-var lineBarLength = 265;
 
-$(document).ready(function(){
-    //FlurryAgent.startSession('VG4NW39X4ZYWBYSNNT5P');
-    start();
-});
-
-</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
 /*
