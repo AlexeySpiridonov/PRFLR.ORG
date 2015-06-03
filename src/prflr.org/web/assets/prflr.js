@@ -173,7 +173,9 @@ function renderGraph(selector)
     container.html("Loading...")
     button.css('color', 'grey').html('Loading...');
     $.getJSON(query, function(data){
-        drawGraph(data)
+        if (data != null) {
+            drawGraph(data)
+        }
     }).complete(function(){
         //grid.css('opacity', 1);
         button.css('color', 'black').html('Refresh');

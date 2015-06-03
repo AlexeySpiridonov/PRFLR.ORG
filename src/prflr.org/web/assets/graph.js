@@ -38,7 +38,7 @@ function drawGraph(graphData) {
         }
 
         //if (hasData) {
-        data.setValue(j, 0, iDate.getHours() + ":" + iDate.getMinutes() + ":" + iDate.getSeconds()); // ts
+        data.setValue(j, 0, formatGraphDate(iDate)); // ts
         //}
 
         j++
@@ -46,7 +46,14 @@ function drawGraph(graphData) {
 
     var chart = new google.visualization.LineChart(document.getElementById('graph_container'));
     chart.draw(data, {width: 1500, height: 800, min: 0, interpolateNulls: true});
-  }
+}
 
-  // Start it when the page is ready
-  //google.setOnLoadCallback(drawGraph);
+function formatGraphDate(date) {
+    year  = date.getFullYear() 
+    month = (date.getMonth()+1) > 10 ? (date.getMonth()+1) : "0"+(date.getMonth()+1)
+    day   = date.getDate()  > 10 ? date.getDate()  : "0"+date.getDate()
+    hours   = date.getHours()   > 10 ? date.getHours()   : "0"+date.getHours()
+    minutes = date.getMinutes() > 10 ? date.getMinutes() : "0"+date.getMinutes()
+    seconds = date.getSeconds() > 10 ? date.getSeconds() : "0"+date.getSeconds()
+    return day+"/"+month+"/"+year + " " + hours + ":" + minutes + ":" + seconds
+}

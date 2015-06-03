@@ -84,22 +84,11 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
         tplVars["user"] = user
 
-        tplVars["GraphTSMin"] = 1432552467
+        /*tplVars["GraphTSMin"] = 1432552467
         tplVars["GraphTSMax"] = 1432552888
         tplVars["GraphMedianStatsJSON"] = "{\"key_1432552467\": 110, \"key_1432552839\": 1035, \"key_1432552888\": 914}"
         tplVars["GraphAvgStatsJSON"] = "{\"key_1432552467\": 130, \"key_1432552839\": 1235, \"key_1432552888\": 814}"
-        tplVars["GraphRPSStatsJSON"] = "{\"key_1432552467\": 6, \"key_1432552839\": 135, \"key_1432552888\": 73}"
-
-        /*graph, _ := timer.FormatGraph(user.ApiKey)
-
-        tplVars["GraphTSMin"] = graph.Min
-        tplVars["GraphTSMax"] = graph.Max
-        GraphMedianStatsJSON, _ := json.Marshal(graph.Median)
-        GraphAvgStatsJSON, _    := json.Marshal(graph.Avg)
-        GraphRPSStatsJSON, _    := json.Marshal(graph.RPS)
-        tplVars["GraphMedianStatsJSON"] = string(GraphMedianStatsJSON)
-        tplVars["GraphAvgStatsJSON"]    = string(GraphAvgStatsJSON)
-        tplVars["GraphRPSStatsJSON"]    = string(GraphRPSStatsJSON)*/
+        tplVars["GraphRPSStatsJSON"] = "{\"key_1432552467\": 6, \"key_1432552839\": 135, \"key_1432552888\": 73}"*/
 
         t.Execute(w, tplVars)
     }
@@ -335,7 +324,36 @@ func graphHandler(w http.ResponseWriter, r *http.Request) {
     // define criteria for current user
     criteria := makeCriteria(r.FormValue("filter"))
 
-    graph, _ := timer.FormatGraph(user.ApiKey, criteria)
+    // From / To Period Criteria
+    start := r.FormValue("start")
+    end   := r.FormValue("end")
+    var startTime, endTime time.Time
+    var startTimeErr, endTimeErr error
+    if len(start) > 0 {
+        startTime, startTimeErr = time.Parse("02/01/2006 15:04:05", start)
+    } else {
+        startTimeErr = errors.New("Value is empty")
+    }
+    if len(end) > 0 {
+        endTime, endTimeErr = time.Parse("02/01/2006 15:04:05", end)
+    } else {
+        endTimeErr = errors.New("Value is empty")
+    }
+
+    if startTimeErr == nil && endTimeErr == nil {
+        criteria["timestamp"] = &bson.M{"$gte": startTime.Unix(), "$lte": endTime.Unix()}
+        fmt.Println(startTime, endTime)
+    } else if startTimeErr == nil {
+        criteria["timestamp"] = &bson.M{"$gte": startTime.Unix()}
+    } else if endTimeErr == nil {
+        criteria["timestamp"] = &bson.M{"$lte": endTime.Unix()}
+    }
+
+    graph, err := timer.FormatGraph(user.ApiKey, criteria)
+    if err != nil {
+        fmt.Println(err)
+        graph = &timer.Graph{}
+    }
 
     /*tplVars := make(map[string]interface{})
 
