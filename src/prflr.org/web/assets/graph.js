@@ -49,11 +49,11 @@ function drawGraph(graphData) {
 }
 
 function formatGraphDate(date) {
-    year  = date.getFullYear() 
-    month = (date.getMonth()+1) > 10 ? (date.getMonth()+1) : "0"+(date.getMonth()+1)
-    day   = date.getDate()  > 10 ? date.getDate()  : "0"+date.getDate()
-    hours   = date.getHours()   > 10 ? date.getHours()   : "0"+date.getHours()
-    minutes = date.getMinutes() > 10 ? date.getMinutes() : "0"+date.getMinutes()
-    seconds = date.getSeconds() > 10 ? date.getSeconds() : "0"+date.getSeconds()
+    year  = date.getUTCFullYear() 
+    month = (date.getUTCMonth()+1) > 10 ? (date.getUTCMonth()+1) : "0"+(date.getUTCMonth()+1)
+    day   = date.getUTCDate()  > 10 ? date.getUTCDate()  : "0"+date.getUTCDate()
+    hours   = date.getUTCHours()   > 10 ? date.getUTCHours()   : "0"+date.getUTCHours()
+    minutes = date.getUTCMinutes() > 10 ? date.getUTCMinutes() : "0"+date.getUTCMinutes()
+    seconds = date.getUTCSeconds() > 10 ? date.getUTCSeconds() : "0"+date.getUTCSeconds()
     return day+"/"+month+"/"+year + " " + hours + ":" + minutes + ":" + seconds
 }
