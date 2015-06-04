@@ -1,13 +1,19 @@
 google.load('visualization', '1.1', {packages: ['corechart', 'imagelinechart']});
 
-function drawGraph(graphData) {
+function drawGraph(graphData, containerId) {
     // Graph
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Date');
-    //data.addColumn('number', 'Users');
-    data.addColumn('number', 'RPS');
-    data.addColumn('number', 'Median');
-    data.addColumn('number', 'Avg');
+
+    if (typeof(graphData.RPS) != "undefined") {
+        data.addColumn('number', 'RPS');
+    }
+    if (typeof(graphData.Median) != "undefined") {
+        data.addColumn('number', 'Median');
+    }
+    if (typeof(graphData.Avg) != "undefined") {
+        data.addColumn('number', 'Avg');
+    }
 
     data.addRows(graphData.Max - graphData.Min + 1);
 
@@ -16,24 +22,22 @@ function drawGraph(graphData) {
     for (var i = graphData.Min; i <= graphData.Max; i++) {
         var iDate = new Date(i*1000)
         var hasData = false
+        var g = 0
 
         key = "key_" + i
-        /*if (typeof(usersStats) != "undefined" && typeof(usersStats[key]) != "undefined") {
-            previousUsersAmount = usersStats[key]
-            data.setValue(j, 1, usersStats[key]);
-        } else {
-            data.setValue(j, 1, previousUsersAmount);
-        }*/
         if (typeof(graphData.RPS) != "undefined" && typeof(graphData.RPS[key]) != "undefined") {
-            data.setValue(j, 1, graphData.RPS[key]);
+            g++
+            data.setValue(j, g, graphData.RPS[key]);
             hasData = true;
         }
         if (typeof(graphData.Median) != "undefined" && typeof(graphData.Median[key]) != "undefined") {
-            data.setValue(j, 2, graphData.Median[key]);
+            g++
+            data.setValue(j, g, graphData.Median[key]);
             hasData = true;
         }
         if (typeof(graphData.Avg) != "undefined" && typeof(graphData.Avg[key]) != "undefined") {
-            data.setValue(j, 3, graphData.Avg[key]);
+            g++
+            data.setValue(j, g, graphData.Avg[key]);
             hasData = true;
         }
 
@@ -44,7 +48,7 @@ function drawGraph(graphData) {
         j++
     }
 
-    var chart = new google.visualization.LineChart(document.getElementById('graph_container'));
+    var chart = new google.visualization.LineChart(document.getElementById(containerId));
     chart.draw(data, {width: 1500, height: 800, min: 0, interpolateNulls: true});
 }
 
