@@ -174,9 +174,10 @@ function renderGraph(selector)
     button.css('color', 'grey').html('Loading...');
     $.getJSON(query, function(data){
         if (data != null) {
-            console.log(data)
-            drawGraph({"Min": data.Min, "Max": data.Max, "Avg": data.Avg}, 'graph_container_avg')
-            drawGraph({"Min": data.Min, "Max": data.Max, "RPS": data.RPS}, 'graph_container_rps')
+            //drawGraph({"Min": data.Min, "Max": data.Max, "Avg": data.Avg}, 'graph_container_avg')
+            //drawGraph({"Min": data.Min, "Max": data.Max, "RPS": data.RPS}, 'graph_container_rps')
+            drawGraph(data.Avg, 'Avg', 'graph_container_avg')
+            drawGraph(data.RPS, 'RPS', 'graph_container_rps')
         }
     }).complete(function(){
         //grid.css('opacity', 1);

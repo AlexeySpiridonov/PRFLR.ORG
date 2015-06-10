@@ -1,17 +1,44 @@
 google.load('visualization', '1.1', {packages: ['corechart', 'imagelinechart']});
 
-function drawGraph(graphData, containerId) {
+function drawGraph(graphData, title, containerId) {
+    if (graphData == null || graphData.length <= 0) {
+        document.getElementById(containerId).innerHTML = "<i>No Data</i>";
+        return false
+    }
+
+    // Graph
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Date');
+    dataTable.addColumn('number', title);
+
+    dataTable.addRows(graphData.length);
+
+    for (var i = 0; i < graphData.length; i++) {
+        var elem = graphData[i]
+
+        var date = elem[0]
+        var data = elem[1]
+
+        dataTable.setValue(i, 0, formatGraphDate(new Date(date*1000)));
+        dataTable.setValue(i, 1, data);
+    }
+
+    var chart = new google.visualization.LineChart(document.getElementById(containerId));
+    chart.draw(dataTable, {width: 1500, height: 800, min: 0, interpolateNulls: true});
+}
+
+function drawAllGraph(graphData, containerId) {
     // Graph
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Date');
 
-    if (typeof(graphData.RPS) != "undefined") {
+    if (typeof(graphData.RPS) != "undefined" && graphData.RPS != null) {
         data.addColumn('number', 'RPS');
     }
-    if (typeof(graphData.Median) != "undefined") {
+    if (typeof(graphData.Median) != "undefined" && graphData.Median != null) {
         data.addColumn('number', 'Median');
     }
-    if (typeof(graphData.Avg) != "undefined") {
+    if (typeof(graphData.Avg) != "undefined" && graphData.Avg != null) {
         data.addColumn('number', 'Avg');
     }
 
@@ -25,17 +52,17 @@ function drawGraph(graphData, containerId) {
         var g = 0
 
         key = "key_" + i
-        if (typeof(graphData.RPS) != "undefined" && typeof(graphData.RPS[key]) != "undefined") {
+        if (typeof(graphData.RPS) != "undefined" && graphData.RPS != null && typeof(graphData.RPS[key]) != "undefined") {
             g++
             data.setValue(j, g, graphData.RPS[key]);
             hasData = true;
         }
-        if (typeof(graphData.Median) != "undefined" && typeof(graphData.Median[key]) != "undefined") {
+        if (typeof(graphData.Median) != "undefined" && graphData.Median != null && typeof(graphData.Median[key]) != "undefined") {
             g++
             data.setValue(j, g, graphData.Median[key]);
             hasData = true;
         }
-        if (typeof(graphData.Avg) != "undefined" && typeof(graphData.Avg[key]) != "undefined") {
+        if (typeof(graphData.Avg) != "undefined" && graphData.Avg != null && typeof(graphData.Avg[key]) != "undefined") {
             g++
             data.setValue(j, g, graphData.Avg[key]);
             hasData = true;

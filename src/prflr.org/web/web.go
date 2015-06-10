@@ -351,7 +351,7 @@ func graphHandler(w http.ResponseWriter, r *http.Request) {
 
     graph, err := timer.FormatGraph(user.ApiKey, criteria)
     if err != nil {
-        //fmt.Println(err)
+        fmt.Println(err)
         graph = &timer.Graph{}
     }
 

@@ -5,7 +5,9 @@ import(
     "prflr.org/config"
     "prflr.org/db"
     "labix.org/v2/mgo/bson"
-    "strconv"
+    "sort"
+    //"fmt"
+    //"strconv"
 )
 
 /**
@@ -35,15 +37,18 @@ type Stat struct {
     Max   float32
 }
 
+type StatTimestampSorter []Stat
+func (a StatTimestampSorter) Len() int           { return len(a) }
+func (a StatTimestampSorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a StatTimestampSorter) Less(i, j int) bool { return a[i].Timestamp < a[j].Timestamp }
+
 /**
  * UI Graph Struct 
  */
 type Graph struct {
-    Min    int64
-    Max    int64
-    Median map[string]int
-    Avg    map[string]int
-    RPS    map[string]int
+    Median [][]int
+    Avg    [][]int
+    RPS    [][]int
 }
 
 func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
@@ -133,7 +138,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         "total": bson.M{"$sum": "$time"},
         "avg"  : bson.M{"$avg": "$time"},
         "timestamp": bson.M{"$first": "$timestamp"},
-        "_id": map[string]string {
+        "_id": map[string]interface{} {
             "timestamp": "$timestamp",
         },
     }
@@ -146,32 +151,69 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     }*/
 
     group := bson.M{"$group": grouplist}
-    sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
+    Sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
     match := bson.M{"$match": criteria}
-    aggregate := []bson.M{match, group, sort}
+    aggregate := []bson.M{match, group, Sort}
 
     err = dbc.Pipe(aggregate).All(&results)
     if err != nil {
         return nil, err
     }
 
-    graph := &Graph{
-        Avg: make(map[string]int), 
+    //k := int64(5)
+    k := int64(len(results) / 500)
+    if k <= 0 {
+        k = 1
+    }
+
+    var normalizedResultsData = make(map[int64][]Stat)
+    for _, stat := range results {
+        var key = stat.Timestamp/k
+        if _, exists := normalizedResultsData[key]; exists {
+            normalizedResultsData[key] = append(normalizedResultsData[key], stat)
+        } else {
+            normalizedResultsData[key] = []Stat{stat}
+            //fmt.Println(normalizedResultsData[key])
+        }
+    }
+    var normalizedResults []Stat
+    for key, statData := range normalizedResultsData {
+        //fmt.Println(key)
+        var count = 0
+        var sum   = 0
+        //var ts    = int64(9999999999999)
+        for _, stat := range statData {
+            count += stat.Count
+            sum   += int(stat.Avg)
+            /*if stat.Timestamp < ts {
+                ts = stat.Timestamp
+            }*/
+        }
+
+        ts := key * k
+        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count, Avg: float32(sum/count)})
+    }
+
+    sort.Sort(StatTimestampSorter(normalizedResults))
+
+    graph := &Graph{}
+    /*graph := &Graph{
+        Avg: make(map[string]int),
         RPS: make(map[string]int),
         Median: make(map[string]int),
         Min: 0,
         Max: 0,
-    }
-    for _, stat := range results {
-        key := "key_" + strconv.FormatInt(stat.Timestamp, 10)
-        graph.Avg[key] = int(stat.Avg)
-        graph.RPS[key] = int(stat.Count)
+    }*/
+    //for _, stat := range results {
+    for _, stat := range normalizedResults {
+        graph.Avg = append(graph.Avg, []int{int(stat.Timestamp), int(stat.Avg)})
+        graph.RPS = append(graph.RPS, []int{int(stat.Timestamp), int(stat.Count)})
     }
 
-    if len(results) > 0 {
+    /*if len(results) > 0 {
         graph.Min = results[0].Timestamp
         graph.Max = results[len(results)-1].Timestamp
-    }
+    }*/
 
     return graph, nil
 }
