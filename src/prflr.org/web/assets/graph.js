@@ -32,8 +32,8 @@ function drawAllGraph(graphData, containerId) {
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Date');
 
-    if (typeof(graphData.RPS) != "undefined" && graphData.RPS != null) {
-        data.addColumn('number', 'RPS');
+    if (typeof(graphData.TPS) != "undefined" && graphData.TPS != null) {
+        data.addColumn('number', 'TPS');
     }
     if (typeof(graphData.Median) != "undefined" && graphData.Median != null) {
         data.addColumn('number', 'Median');
@@ -52,9 +52,9 @@ function drawAllGraph(graphData, containerId) {
         var g = 0
 
         key = "key_" + i
-        if (typeof(graphData.RPS) != "undefined" && graphData.RPS != null && typeof(graphData.RPS[key]) != "undefined") {
+        if (typeof(graphData.TPS) != "undefined" && graphData.TPS != null && typeof(graphData.TPS[key]) != "undefined") {
             g++
-            data.setValue(j, g, graphData.RPS[key]);
+            data.setValue(j, g, graphData.TPS[key]);
             hasData = true;
         }
         if (typeof(graphData.Median) != "undefined" && graphData.Median != null && typeof(graphData.Median[key]) != "undefined") {

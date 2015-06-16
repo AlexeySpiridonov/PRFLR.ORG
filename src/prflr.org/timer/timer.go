@@ -48,7 +48,7 @@ func (a StatTimestampSorter) Less(i, j int) bool { return a[i].Timestamp < a[j].
 type Graph struct {
     Median [][]int
     Avg    [][]int
-    RPS    [][]int
+    TPS    [][]int // Timers per Second
 }
 
 func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
@@ -202,7 +202,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     graph := &Graph{}
     /*graph := &Graph{
         Avg: make(map[string]int),
-        RPS: make(map[string]int),
+        TPS: make(map[string]int),
         Median: make(map[string]int),
         Min: 0,
         Max: 0,
@@ -210,7 +210,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     //for _, stat := range results {
     for _, stat := range normalizedResults {
         graph.Avg = append(graph.Avg, []int{int(stat.Timestamp), int(stat.Avg)})
-        graph.RPS = append(graph.RPS, []int{int(stat.Timestamp), int(stat.Count)})
+        graph.TPS = append(graph.TPS, []int{int(stat.Timestamp), int(stat.Count)})
     }
 
     /*if len(results) > 0 {
