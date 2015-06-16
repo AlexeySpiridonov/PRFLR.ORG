@@ -215,7 +215,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     sort.Sort(StatTimestampSorter(normalizedResults))
 
     for _, stat := range normalizedResults {
-        graph.Avg = append(graph.Avg, []float32{float32(stat.Timestamp), stat.Avg})
+        graph.Avg = append(graph.Avg, []float32{float32(stat.Timestamp), fmt.Sprintf("%.2f", stat.Avg)})
         graph.TPS = append(graph.TPS, []int{int(stat.Timestamp), stat.Count})
     }
 
