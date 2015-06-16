@@ -64,7 +64,7 @@ function drawAllGraph(graphData, containerId) {
         }
         if (typeof(graphData.Avg) != "undefined" && graphData.Avg != null && typeof(graphData.Avg[key]) != "undefined") {
             g++
-            data.setValue(j, g, graphData.Avg[key]);
+            data.setValue(j, g, graphData.Avg[key].toFixed(2));
             hasData = true;
         }
 
