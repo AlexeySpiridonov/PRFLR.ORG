@@ -84,12 +84,6 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
         tplVars["user"] = user
 
-        /*tplVars["GraphTSMin"] = 1432552467
-        tplVars["GraphTSMax"] = 1432552888
-        tplVars["GraphMedianStatsJSON"] = "{\"key_1432552467\": 110, \"key_1432552839\": 1035, \"key_1432552888\": 914}"
-        tplVars["GraphAvgStatsJSON"] = "{\"key_1432552467\": 130, \"key_1432552839\": 1235, \"key_1432552888\": 814}"
-        tplVars["GraphRPSStatsJSON"] = "{\"key_1432552467\": 6, \"key_1432552839\": 135, \"key_1432552888\": 73}"*/
-
         t.Execute(w, tplVars)
     }
 }
@@ -354,17 +348,6 @@ func graphHandler(w http.ResponseWriter, r *http.Request) {
         fmt.Println(err)
         graph = &timer.Graph{}
     }
-
-    /*tplVars := make(map[string]interface{})
-
-    tplVars["GraphTSMin"] = graph.Min
-    tplVars["GraphTSMax"] = graph.Max
-    GraphMedianStatsJSON, _ := json.Marshal(graph.Median)
-    GraphAvgStatsJSON, _    := json.Marshal(graph.Avg)
-    GraphRPSStatsJSON, _    := json.Marshal(graph.RPS)
-    tplVars["GraphMedianStatsJSON"] = string(GraphMedianStatsJSON)
-    tplVars["GraphAvgStatsJSON"]    = string(GraphAvgStatsJSON)
-    tplVars["GraphRPSStatsJSON"]    = string(GraphRPSStatsJSON)*/
 
     j, err := json.Marshal(graph)
     if err != nil {
