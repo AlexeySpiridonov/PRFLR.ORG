@@ -145,7 +145,6 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
 
     // criteria
     criteria["apikey"] = apiKey
-    criteria["timestamp"] = bson.M{"$gt": 0}
     /*criteria := map[string]string {
         "apikey": apiKey,
         "src": "node1.mag.ndmsystems.com",
@@ -169,6 +168,9 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
 
     var normalizedResultsData = make(map[int64][]Stat)
     for _, stat := range results {
+        if stat.Timestamp <= 0 {
+            continue
+        }
         var key = stat.Timestamp/k
         if _, exists := normalizedResultsData[key]; exists {
             normalizedResultsData[key] = append(normalizedResultsData[key], stat)
