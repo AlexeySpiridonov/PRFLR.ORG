@@ -19,6 +19,11 @@ function drawGraph(graphData, title, containerId) {
         var date = elem[0]
         var data = elem[1]
 
+        // check if it's Float
+        if (Math.round(data) != data) {
+            data = data.toFixed(2)
+        }
+
         dataTable.setValue(i, 0, formatGraphDate(new Date(date*1000)));
         dataTable.setValue(i, 1, data);
     }
@@ -64,8 +69,7 @@ function drawAllGraph(graphData, containerId) {
         }
         if (typeof(graphData.Avg) != "undefined" && graphData.Avg != null && typeof(graphData.Avg[key]) != "undefined") {
             g++
-            console.log(graphData.Avg[key], graphData.Avg[key].toFixed(2))
-            data.setValue(j, g, graphData.Avg[key].toFixed(2));
+            data.setValue(j, g, graphData.Avg[key]);
             hasData = true;
         }
 
