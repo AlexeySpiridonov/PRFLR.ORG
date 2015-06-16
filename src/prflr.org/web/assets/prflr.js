@@ -41,7 +41,15 @@ function start(){
         $('#refresh_graph_button').click(function(){
             renderGraph('#graph')
         }).click()
-    })
+    });
+    $('#graph .prflrItemHeader').click(function(){
+        assignFilterChunkValue($(this).attr('item'), '*');
+        renderGraph('#graph')
+    });
+    $('#graph .resetFilter').click(function(){
+        assignFilterChunkValue('*', '*');
+        renderGraph('#graph')
+    });
 
 	// URL anchor handlers
 	var hash = window.location.hash.replace('#', '');
@@ -172,9 +180,12 @@ function renderGraph(selector)
 
     container.html("Loading...")
     button.css('color', 'grey').html('Loading...');
+    $('#graph_avg_min_max').html('')
     $.getJSON(query, function(data){
         if (data != null) {
-            $('#graph_avg_min_max').html('<br/>Min: ' + data.Min.toFixed(2) + '<br/>Max: ' + data.Max.toFixed(2))
+            if (data.Max > 0) {
+                $('#graph_avg_min_max').html('<br/>Min: ' + data.Min.toFixed(2) + '<br/>Max: ' + data.Max.toFixed(2))
+            }
             //drawGraph({"Min": data.Min, "Max": data.Max, "Avg": data.Avg}, 'graph_container_avg')
             //drawGraph({"Min": data.Min, "Max": data.Max, "RPS": data.TPS}, 'graph_container_tps')
             drawGraph(data.Avg, 'Avg', 'graph_container_avg')
