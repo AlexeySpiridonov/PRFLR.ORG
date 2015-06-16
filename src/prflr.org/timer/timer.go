@@ -145,6 +145,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
 
     // criteria
     criteria["apikey"] = apiKey
+    criteria["timestamp"] = bson.M{"$gt": 0}
     /*criteria := map[string]string {
         "apikey": apiKey,
         "src": "node1.mag.ndmsystems.com",
