@@ -133,8 +133,8 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     dbc := db.C(collectionName)
 
     graph := &Graph{
-        Min: float32(0),
-        Max: float32(999999999999),
+        Min: float32(999999999999),
+        Max: float32(0),
     }
     var results []Stat
 

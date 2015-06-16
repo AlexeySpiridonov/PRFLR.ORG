@@ -174,6 +174,7 @@ function renderGraph(selector)
     button.css('color', 'grey').html('Loading...');
     $.getJSON(query, function(data){
         if (data != null) {
+            $('#graph_avg_min_max').html('<br/>Min: ' + data.Min + '<br/>Max: ' + data.Max)
             //drawGraph({"Min": data.Min, "Max": data.Max, "Avg": data.Avg}, 'graph_container_avg')
             //drawGraph({"Min": data.Min, "Max": data.Max, "RPS": data.TPS}, 'graph_container_tps')
             drawGraph(data.Avg, 'Avg', 'graph_container_avg')
