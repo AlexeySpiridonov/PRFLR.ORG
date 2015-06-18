@@ -168,7 +168,28 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         return nil, err
     }
 
-    //k := int64(5)
+    // Add Zeros
+    if len(results) > 0 {
+        minTS := results[0].Timestamp
+        maxTS := results[len(results)-1].Timestamp
+
+        for i := minTS; i <= maxTS; i++ {
+            var found = false
+            for _, stat := range results {
+                if stat.Timestamp == i {
+                    found = true
+                    break
+                }
+            }
+            if !found {
+                results = append(results, Stat{Timestamp: i, Count: 0, Avg: 0})
+            }
+        }
+
+        // Sort by TS
+        sort.Sort(StatTimestampSorter(results))
+    }
+
     k := int64(len(results) / 500)
     if k <= 0 {
         k = 1
