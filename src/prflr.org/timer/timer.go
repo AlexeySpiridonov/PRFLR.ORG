@@ -196,20 +196,26 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     }
     var normalizedResults []Stat
     for key, statData := range normalizedResultsData {
-        //fmt.Println(key)
-        var count = 0
-        var sum   = float32(0)
-        //var ts    = int64(9999999999999)
+        var count  = 0
+        var median []float32
         for _, stat := range statData {
             count += stat.Count
-            sum   += stat.Avg
-            /*if stat.Timestamp < ts {
-                ts = stat.Timestamp
-            }*/
+            median = append(median, stat.Avg)
+        }
+
+        // calc median
+        timerMedian := float32(0)
+        medianLenth := len(median)
+        if medianLenth % 2 == 0 {
+            // even
+            timerMedian = (median[medianLenth / 2] + median[(medianLenth / 2)-1]) / 2
+        } else {
+            // odd
+            timerMedian = median[(medianLenth / 2)]
         }
 
         ts := key * k
-        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count, Avg: sum/float32(count)})
+        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count, Avg: timerMedian})
     }
 
     sort.Sort(StatTimestampSorter(normalizedResults))
