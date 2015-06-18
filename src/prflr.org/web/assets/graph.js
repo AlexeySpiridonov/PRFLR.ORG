@@ -49,9 +49,9 @@ function drawTimerGraph(graphData, containerId) {
         var max = graphData.Max[i]
 
         data.setValue(i, 0, formatGraphDate(new Date(avg[0]*1000)));
-        data.setValue(i, 1, min[1].toFixed(2));
-        data.setValue(i, 2, avg[1].toFixed(2));
-        data.setValue(i, 3, max[1].toFixed(2));
+        data.setValue(i, 1, formatTimer(min[1]));
+        data.setValue(i, 2, formatTimer(avg[1]));
+        data.setValue(i, 3, formatTimer(max[1]));
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
@@ -70,4 +70,13 @@ function formatGraphDate(date) {
     minutes = date.getUTCMinutes() > 10 ? date.getUTCMinutes() : "0"+date.getUTCMinutes()
     seconds = date.getUTCSeconds() > 10 ? date.getUTCSeconds() : "0"+date.getUTCSeconds()
     return day+"/"+month+"/"+year + " " + hours + ":" + minutes + ":" + seconds
+}
+
+function formatTimer(timer) {
+    if (timer > 1000) {
+        timer = Math.round(timer)
+    } else {
+        timer = timer.toFixed(2)
+    }
+    return timer
 }
