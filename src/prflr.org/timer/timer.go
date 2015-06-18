@@ -158,7 +158,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     group := bson.M{"$group": grouplist}
     Sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
     match := bson.M{"$match": criteria}
-    limit := bson.M{"$limit": 1000}
+    limit := bson.M{"$limit": 100000}
     aggregate := []bson.M{match, Sort, limit, group}
 
     err = dbc.Pipe(aggregate).All(&results)
