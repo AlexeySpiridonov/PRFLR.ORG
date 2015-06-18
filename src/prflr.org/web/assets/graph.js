@@ -55,7 +55,11 @@ function drawTimerGraph(graphData, containerId) {
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(data, {width: 1500, height: 800, min: 0, interpolateNulls: true});
+    chart.draw(data, {width: 1500, height: 800, min: 0, interpolateNulls: true, series: {
+            0: { color: '#0000FF' },
+            1: { color: '#00FF00' },
+            2: { color: '#FF0000'},
+          }});
 }
 
 function formatGraphDate(date) {
