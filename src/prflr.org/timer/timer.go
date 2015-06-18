@@ -158,12 +158,21 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     group := bson.M{"$group": grouplist}
     Sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
     match := bson.M{"$match": criteria}
-    limit := bson.M{"$limit": 100000}
-    aggregate := []bson.M{match, Sort, limit, group}
+    //limit := bson.M{"$limit": 100000}
+    aggregate := []bson.M{match, Sort, /*limit,*/ group}
 
     err = dbc.Pipe(aggregate).All(&results)
     if err != nil {
         return nil, err
+    }
+
+    // Reformat Result to String-Keys Map
+    resultsMap := make(map[int64]Stat)
+    for _, stat := range results {
+        if stat.Timestamp <= 0 {
+            continue
+        }
+        resultsMap[stat.Timestamp] = stat
     }
 
     // Add Zeros
@@ -172,20 +181,13 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         maxTS := results[len(results)-1].Timestamp
 
         for i := minTS; i <= maxTS; i++ {
-            var found = false
-            for _, stat := range results {
-                if stat.Timestamp == i {
-                    found = true
-                    break
-                }
-            }
-            if !found {
-                results = append(results, Stat{Timestamp: i, Count: 0, Avg: 0, Min: 0, Max: 0})
+            if _, found := resultsMap[i]; !found {
+                resultsMap[i] = Stat{Timestamp: i, Count: 0, Avg: 0, Min: 0, Max: 0}
             }
         }
 
         // Sort by TS
-        sort.Sort(StatTimestampSorter(results))
+        //sort.Sort(StatTimestampSorter(results))
     }
 
     k := int64(len(results) / 500)
@@ -194,7 +196,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     }
 
     var normalizedResultsData = make(map[int64][]Stat)
-    for _, stat := range results {
+    for _, stat := range resultsMap {
         if stat.Timestamp <= 0 {
             continue
         }
