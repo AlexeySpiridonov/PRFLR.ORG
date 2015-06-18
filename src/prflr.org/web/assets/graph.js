@@ -79,7 +79,11 @@ function formatTimer(timer) {
     if (timer > 10000) {
         timer = Math.round(timer/1000) + " sec"
     } else if (timer > 1000) {
-        timer = Math.round(timer) + " ms"
+        if (timer % 1000 > 500) {
+            timer = Math.round(timer/1000) + ".5 sec"
+        } else {
+            timer = Math.round(timer/1000) + " sec"
+        }
     } else {
         timer = timer.toFixed(2) + " ms"
     }
