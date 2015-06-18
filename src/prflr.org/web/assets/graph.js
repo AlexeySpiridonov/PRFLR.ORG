@@ -48,10 +48,10 @@ function drawTimerGraph(graphData, containerId) {
         var avg = graphData.Avg[i]
         var max = graphData.Max[i]
 
-        dataTable.setValue(i, 0, formatGraphDate(new Date(avg[0]*1000)));
-        dataTable.setValue(i, 1, min[1].toFixed(2));
-        dataTable.setValue(i, 2, avg[1].toFixed(2));
-        dataTable.setValue(i, 3, max[1].toFixed(2));
+        data.setValue(i, 0, formatGraphDate(new Date(avg[0]*1000)));
+        data.setValue(i, 1, min[1].toFixed(2));
+        data.setValue(i, 2, avg[1].toFixed(2));
+        data.setValue(i, 3, max[1].toFixed(2));
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
