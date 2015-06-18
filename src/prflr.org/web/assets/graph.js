@@ -32,52 +32,26 @@ function drawGraph(graphData, title, containerId) {
     chart.draw(dataTable, {width: 1500, height: 800, min: 0, interpolateNulls: true});
 }
 
-function drawAllGraph(graphData, containerId) {
+function drawTimerGraph(graphData, containerId) {
     // Graph
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Date');
 
-    if (typeof(graphData.TPS) != "undefined" && graphData.TPS != null) {
-        data.addColumn('number', 'TPS');
-    }
-    if (typeof(graphData.Median) != "undefined" && graphData.Median != null) {
-        data.addColumn('number', 'Median');
-    }
-    if (typeof(graphData.Avg) != "undefined" && graphData.Avg != null) {
-        data.addColumn('number', 'Avg');
-    }
+    data.addColumn('number', 'Min');
+    data.addColumn('number', 'Avg');
+    data.addColumn('number', 'Max');
 
-    data.addRows(graphData.Max - graphData.Min + 1);
+    data.addRows(graphData.Avg.length);
 
-    var j = 0
-    var previousUsersAmount = 0
-    for (var i = graphData.Min; i <= graphData.Max; i++) {
-        var iDate = new Date(i*1000)
-        var hasData = false
-        var g = 0
+    for (var i = 0; i < graphData.Avg.length; i++) {
+        var min = graphData.Min[i]
+        var avg = graphData.Avg[i]
+        var max = graphData.Max[i]
 
-        key = "key_" + i
-        if (typeof(graphData.TPS) != "undefined" && graphData.TPS != null && typeof(graphData.TPS[key]) != "undefined") {
-            g++
-            data.setValue(j, g, graphData.TPS[key]);
-            hasData = true;
-        }
-        if (typeof(graphData.Median) != "undefined" && graphData.Median != null && typeof(graphData.Median[key]) != "undefined") {
-            g++
-            data.setValue(j, g, graphData.Median[key]);
-            hasData = true;
-        }
-        if (typeof(graphData.Avg) != "undefined" && graphData.Avg != null && typeof(graphData.Avg[key]) != "undefined") {
-            g++
-            data.setValue(j, g, graphData.Avg[key]);
-            hasData = true;
-        }
-
-        //if (hasData) {
-        data.setValue(j, 0, formatGraphDate(iDate)); // ts
-        //}
-
-        j++
+        dataTable.setValue(i, 0, formatGraphDate(new Date(avg[0]*1000)));
+        dataTable.setValue(i, 1, min[1].toFixed(2));
+        dataTable.setValue(i, 2, avg[1].toFixed(2));
+        dataTable.setValue(i, 3, max[1].toFixed(2));
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));

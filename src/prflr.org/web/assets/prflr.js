@@ -186,9 +186,8 @@ function renderGraph(selector)
             if (data.Max > 0) {
                 $('#graph_avg_min_max').html('<br/>Min: ' + data.Min.toFixed(2) + '<br/>Max: ' + data.Max.toFixed(2))
             }
-            //drawGraph({"Min": data.Min, "Max": data.Max, "Avg": data.Avg}, 'graph_container_avg')
-            //drawGraph({"Min": data.Min, "Max": data.Max, "RPS": data.TPS}, 'graph_container_tps')
-            drawGraph(data.Avg, 'Avg', 'graph_container_avg')
+            //drawGraph(data.Avg, 'Avg', 'graph_container_avg')
+            drawTimerGraph(data, 'graph_container_avg')
             drawGraph(data.TPS, 'TPS', 'graph_container_tps')
         }
     }).complete(function(){

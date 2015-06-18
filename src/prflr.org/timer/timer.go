@@ -49,8 +49,8 @@ type Graph struct {
     Median [][]int
     Avg    [][]interface{}
     TPS    [][]int // Timers per Second
-    Min   float32
-    Max   float32
+    Min    [][]interface{}
+    Max    [][]interface{}
 }
 
 func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
@@ -132,10 +132,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     db  := session.DB(config.DBName)
     dbc := db.C(collectionName)
 
-    graph := &Graph{
-        Min: float32(999999999999),
-        Max: float32(0),
-    }
+    graph := &Graph{}
     var results []Stat
 
     // group params
@@ -182,7 +179,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
                 }
             }
             if !found {
-                results = append(results, Stat{Timestamp: i, Count: 0, Avg: 0})
+                results = append(results, Stat{Timestamp: i, Count: 0, Avg: 0, Min: 0, Max: 0})
             }
         }
 
@@ -208,20 +205,28 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
             //fmt.Println(normalizedResultsData[key])
         }
 
-        if stat.Min < graph.Min {
+        /*if stat.Min < graph.Min {
             graph.Min = stat.Min
         }
         if stat.Max > graph.Max {
             graph.Max = stat.Max
-        }
+        }*/
     }
     var normalizedResults []Stat
     for key, statData := range normalizedResultsData {
         var count  = 0
         var median []float32
+        var min = float32(99999999)
+        var max = float32(0)
         for _, stat := range statData {
             count += stat.Count
             median = append(median, stat.Avg)
+            if min > stat.Min {
+                min = stat.Min
+            }
+            if max < stat.Max {
+                max = stat.Max
+            }
         }
 
         // calc median
@@ -236,13 +241,15 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         }
 
         ts := key * k
-        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count, Avg: timerMedian})
+        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count, Avg: timerMedian, Min: min, Max: max})
     }
 
     sort.Sort(StatTimestampSorter(normalizedResults))
 
     for _, stat := range normalizedResults {
+        graph.Min = append(graph.Min, []interface{}{stat.Timestamp, stat.Min})
         graph.Avg = append(graph.Avg, []interface{}{stat.Timestamp, stat.Avg})
+        graph.Max = append(graph.Max, []interface{}{stat.Timestamp, stat.Max})
         graph.TPS = append(graph.TPS, []int{int(stat.Timestamp), stat.Count})
     }
 
