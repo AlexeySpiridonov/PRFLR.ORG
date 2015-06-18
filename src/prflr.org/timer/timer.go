@@ -158,7 +158,8 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     group := bson.M{"$group": grouplist}
     Sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
     match := bson.M{"$match": criteria}
-    aggregate := []bson.M{match, group, Sort}
+    limit := bson.M{"$limit": 1000}
+    aggregate := []bson.M{match, Sort, limit, group}
 
     err = dbc.Pipe(aggregate).All(&results)
     if err != nil {
@@ -204,13 +205,6 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
             normalizedResultsData[key] = []Stat{stat}
             //fmt.Println(normalizedResultsData[key])
         }
-
-        /*if stat.Min < graph.Min {
-            graph.Min = stat.Min
-        }
-        if stat.Max > graph.Max {
-            graph.Max = stat.Max
-        }*/
     }
     var normalizedResults []Stat
     for key, statData := range normalizedResultsData {
@@ -241,7 +235,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         }
 
         ts := key * k
-        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count, Avg: timerMedian, Min: min, Max: max})
+        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count/len(statData), Avg: timerMedian, Min: min, Max: max})
     }
 
     sort.Sort(StatTimestampSorter(normalizedResults))
