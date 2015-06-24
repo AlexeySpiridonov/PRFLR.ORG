@@ -22,7 +22,7 @@ func (email *Email) Send() error {
     // @TODO: move it to Config
     auth := smtp.PlainAuth(
         "",
-        "robot@prflr.org",
+        "no-reply@2hive.org",
         "robot06539010",
         "smtp.gmail.com",
     )
