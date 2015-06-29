@@ -70,12 +70,11 @@ function drawTimerGraph(graphData, containerId) {
         height: 500, 
         min: 0, 
         explorer: {},
-        selectionMode: 'multiple',
         tooltip: { trigger: 'selection' },
         aggregationTarget: 'series',
         curveType: 'function',
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
-        //interpolateNulls: true,
+        interpolateNulls: true,
         colors: ['blue', 'green', 'red'], 
         series: { colors: ['blue', 'green', 'red'] }
     })
