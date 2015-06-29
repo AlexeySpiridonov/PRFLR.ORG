@@ -2,7 +2,7 @@ body {font-family: Times New Roman;}
 
 div.auth, div.recovery, div.register, div.login {font-style: Italic; font-size: 1.1em; width: 1000px;margin: 0 auto}
 
-.graph_container_avg, .graph_container_tps {width:100%; padding:20px;}
+.graph_container_avg, .graph_container_tps {width:100%; padding:0px;height:400px;margin-top:30px;}
 
 .spacer {height: 100px}
 
