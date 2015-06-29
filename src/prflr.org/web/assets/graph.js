@@ -29,7 +29,7 @@ function drawGraph(graphData, title, containerId) {
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(dataTable, {width: 1500, height: 500, min: 0, interpolateNulls: true});
+    chart.draw(dataTable, {width: 900, height: 500, min: 0, interpolateNulls: true});
 }
 
 function drawTimerGraph(graphData, containerId) {
@@ -59,7 +59,7 @@ function drawTimerGraph(graphData, containerId) {
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
     chart.draw(data, {
-        width: 90, 
+        width: 900, 
         height: 500, 
         min: 0, 
         curveType: 'function',
