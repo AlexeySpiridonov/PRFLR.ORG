@@ -73,16 +73,7 @@ function drawTimerGraph(graphData, containerId) {
         curveType: 'function',
         //legend: { position: 'bottom' },
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
-        interpolateNulls: true, 
-        series: {
-            0: { color: '#0000FF' },
-            1: { color: '#00FF00' },
-            2: { axis: 'Temps', color: '#FF0000' }
-        },
-        axes: {
-          y: {
-            'Temps': {label: 'Time, ms'}
-          }
+        interpolateNulls: true
         }
     })
     );
