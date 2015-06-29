@@ -8,7 +8,7 @@ function drawGraph(graphData, title, containerId) {
 
     // Graph
     var dataTable = new google.visualization.DataTable();
-    dataTable.addColumn('string', 'Date');
+    dataTable.addColumn('string', 'Timeline');
     dataTable.addColumn('number', title);
 
     dataTable.addRows(graphData.length);
@@ -44,7 +44,7 @@ function drawGraph(graphData, title, containerId) {
 function drawTimerGraph(graphData, containerId) {
     // Graph
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Date');
+    data.addColumn('string', 'Timeline');
 
     data.addColumn('number', 'Min');
     data.addColumn('number', 'Avg');
@@ -70,7 +70,8 @@ function drawTimerGraph(graphData, containerId) {
         min: 0, 
         curveType: 'function',
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
-        interpolateNulls: true
+        interpolateNulls: true,
+        series: { colors: ['blue', 'green', 'red'] }
     })
     );
 }
