@@ -78,7 +78,6 @@
 
             <!-- STATISTIC -->
             <div id="aggregate" class="profiler_block">
-                <!--<h1>Statistic</h1>-->
                 <form action="/aggregate" method="GET" onsubmit="$(this).find('.refresh_button').click();return false">
                     <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
                         <tr>
@@ -145,9 +144,7 @@
                             <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
                             <td class="r2 f30"></td>
                             <td class="r3"></td>
-                            <td class="r4 f18">
-                                Time<br/>&nbsp;
-                            </td>
+                            <td class="r4 f18">&nbsp;<br/>&nbsp;</td>
                         </tr>
                         <tr>
                             <td class="r0 resetFilter" style="vertical-align: top;padding-top: 11px;">#>&nbsp;</td>
@@ -170,9 +167,8 @@
                         <tr>
                             <td class='b0'></td>
                             <td colspan="4">
-                                <!--<table class="m profiler_grid t100" border="0" cellpadding="0" cellspacing="0"></table>-->
-                                <div id="graph_container_avg"></div><br/>
-                                <div id="graph_container_tps"></div><br/>
+                                <div id="graph_container_avg"></div>
+                                <div id="graph_container_tps"></div>
                             </td>
                         </tr>
                     </table>
