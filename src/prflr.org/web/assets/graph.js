@@ -34,7 +34,7 @@ function drawGraph(graphData, title, containerId) {
             //width: 1200, 
             height: 500, 
             min: 0, 
-            //interpolateNulls: true,
+            interpolateNulls: true,
             curveType: 'function',
             chartArea: {left:0,top:0,width:'100%',height:'100%'}
         }
@@ -64,13 +64,11 @@ function drawTimerGraph(graphData, containerId) {
         data.setCell(i, 3, max[1], formatTimer(max[1]));
     }
 
-    var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(data, ({
+    var chart = new google.charts.Line(document.getElementById(containerId));
+    chart.draw(data, google.charts.Line.convertOptions({
         //width: 1200, 
         height: 500, 
         min: 0, 
-        tooltip: { trigger: 'selection' },
-        aggregationTarget: 'series',
         curveType: 'function',
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
         interpolateNulls: true,
