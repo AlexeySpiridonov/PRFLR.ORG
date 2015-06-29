@@ -28,8 +28,19 @@ function drawGraph(graphData, title, containerId) {
         dataTable.setValue(i, 1, data);
     }
 
-    var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(dataTable, {width: 900, height: 500, min: 0, interpolateNulls: true});
+    var chart = new google.charts.Line(document.getElementById(containerId));
+    chart.draw(dataTable, google.charts.Line.convertOptions(
+        {
+            //width: 1200, 
+            //height: 500, 
+            min: 0, 
+            interpolateNulls: true,
+            curveType: 'function',
+            legend: { position: 'bottom' },
+            chartArea: {left:0,top:0,width:'100%',height:'100%'},
+            
+        }
+    ));
 }
 
 function drawTimerGraph(graphData, containerId) {
@@ -49,9 +60,6 @@ function drawTimerGraph(graphData, containerId) {
         var max = graphData.Max[i]
 
         data.setValue(i, 0, formatGraphDate(new Date(avg[0]*1000)));
-        //data.setValue(i, 1, formatTimer(min[1]));
-        //data.setValue(i, 2, formatTimer(avg[1]));
-        //data.setValue(i, 3, formatTimer(max[1]));
         data.setCell(i, 1, min[1], formatTimer(min[1]));
         data.setCell(i, 2, avg[1], formatTimer(avg[1]));
         data.setCell(i, 3, max[1], formatTimer(max[1]));
@@ -59,8 +67,8 @@ function drawTimerGraph(graphData, containerId) {
 
     var chart = new google.charts.Line(document.getElementById(containerId));
     chart.draw(data, google.charts.Line.convertOptions({
-        width: 900, 
-        height: 500, 
+        //width: 1200, 
+        //height: 500, 
         min: 0, 
         curveType: 'function',
         legend: { position: 'bottom' },
