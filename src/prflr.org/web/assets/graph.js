@@ -64,8 +64,8 @@ function drawTimerGraph(graphData, containerId) {
         data.setCell(i, 3, max[1], formatTimer(max[1]));
     }
 
-    var chart = new google.charts.Line(document.getElementById(containerId));
-    chart.draw(data, google.charts.Line.convertOptions({
+    var chart = new google.visualization.LineChart(document.getElementById(containerId));
+    chart.draw(data, ({
         //width: 1200, 
         height: 500, 
         min: 0, 
