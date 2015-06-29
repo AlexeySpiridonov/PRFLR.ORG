@@ -49,6 +49,7 @@ function drawTimerGraph(graphData, containerId) {
     data.addColumn('number', 'Min');
     data.addColumn('number', 'Avg');
     data.addColumn('number', 'Max');
+    //data.addColumn('number', 'TPS');
 
     data.addRows(graphData.Avg.length);
 
@@ -56,12 +57,14 @@ function drawTimerGraph(graphData, containerId) {
         var min = graphData.Min[i]
         var avg = graphData.Avg[i]
         var max = graphData.Max[i]
-
+        //var tps = graphData.TPS[i]
 
         data.setValue(i, 0, new Date(avg[0]*1000));
         data.setCell(i, 1, min[1], formatTimer(min[1]));
         data.setCell(i, 2, avg[1], formatTimer(avg[1]));
         data.setCell(i, 3, max[1], formatTimer(max[1]));
+        //data.setCell(i, 4, tps[1]);
+
     }
 
     var chart = new google.charts.Line(document.getElementById(containerId));
@@ -72,8 +75,19 @@ function drawTimerGraph(graphData, containerId) {
         curveType: 'none',
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
         interpolateNulls: true,
-        colors: ['blue', 'green', 'red'], 
-        series: { colors: ['blue', 'green', 'red'] }
+        colors: ['blue', 'green', 'red', 'black'], 
+        series: {
+            0: {targetAxisIndex:0, axis: 'mam'},
+            1:{targetAxisIndex:0},
+            2:{targetAxisIndex:0}
+            //3:{targetAxisIndex:1, axis: 'tps'},
+        },
+        axes: {
+          y: {
+            mam: {label: 'Min/Avr/Max, ms'},
+            //tps: {label: 'TPS'}
+          }
+        }
     })
     );
 }
