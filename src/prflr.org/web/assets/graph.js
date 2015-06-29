@@ -8,7 +8,7 @@ function drawGraph(graphData, title, containerId) {
 
     // Graph
     var dataTable = new google.visualization.DataTable();
-    dataTable.addColumn('string', 'Timeline');
+    dataTable.addColumn('date', 'Timeline');
     dataTable.addColumn('number', title);
 
     dataTable.addRows(graphData.length);
@@ -24,7 +24,7 @@ function drawGraph(graphData, title, containerId) {
             data = data.toFixed(2)
         }
 
-        dataTable.setValue(i, 0, formatGraphDate(new Date(date*1000)));
+        dataTable.setValue(i, 0, new Date(date*1000));
         dataTable.setValue(i, 1, data);
     }
 
@@ -56,6 +56,7 @@ function drawTimerGraph(graphData, containerId) {
         var min = graphData.Min[i]
         var avg = graphData.Avg[i]
         var max = graphData.Max[i]
+
 
         data.setValue(i, 0, formatGraphDate(new Date(avg[0]*1000)));
         data.setCell(i, 1, min[1], formatTimer(min[1]));
