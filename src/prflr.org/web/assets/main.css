@@ -4,6 +4,8 @@ div.auth, div.recovery, div.register, div.login {font-style: Italic; font-size: 
 
 .graph_container_avg, .graph_container_tps {width:100%; padding:0px;height:400px;margin-top:30px;}
 
+.graph_container {width:100%; padding:0px;margin-top:30px;}
+
 .spacer {height: 100px}
 
 .landing_blocks div {
