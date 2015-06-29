@@ -141,7 +141,6 @@
 
             <!-- GRAPH -->
             <div id="graph" class="profiler_block">
-                <!--<h1>Time Graph</h1>-->
                 <form action="/graph" method="GET" onsubmit="$('#refresh_graph_button').click();return false">
                     <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
                         <tr>
@@ -151,16 +150,12 @@
                             <td class="r3"></td>
                             <td class="r4 f18">
                                 Time<br/>&nbsp;
-                                
                             </td>
                         </tr>
                         <tr>
                             <td class="r0 resetFilter" style="vertical-align: top;padding-top: 11px;">#>&nbsp;</td>
                             <td>
                                 <input name="filter" class='cp' value="*/*/*/*" />
-                                <br/><br/>
-                                From:&nbsp;<input name="start" /> &nbsp; To:&nbsp;<input name="end" />
-                                <div id="graph_avg_min_max"></div>
                             </td>
                             <td><button id="refresh_graph_button">Refresh</button></td>
                             <td></td>
@@ -168,7 +163,9 @@
                         </tr>
                         <tr>
                             <td class='r0'></td>
-                            <td></td>
+                            <td style="text-align:right; padding-right:30px;">
+                                From:&nbsp;<input name="start" /> &nbsp;&nbsp;&nbsp; To:&nbsp;<input name="end" />
+                            </td>
                             <td>&nbsp;</td>
                             <td></td>
                             <td></td>
@@ -192,7 +189,7 @@
                 <b>Email</b> {{.user.Email}} </br>
                 <b>Password</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
                 <b>ApiKey</b> {{.user.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
-                <b>Storage:</b> 1 000 000 timers / 200Mb. To increase your storage please contact us (<a href="email:info@prflr.org">info@prflr.org</a>). This option costs $30 a month.</br>
+                <b>Storage:</b> 1 000 000 timers / 200Mb. <br/> - - - To increase your storage please contact us (<a href="email:info@prflr.org">info@prflr.org</a>). This option costs $30 a month.</br>
 
                 <br/><br/><br/>
                 <div style="width:50%;border-bottom:1px solid black"></div>
