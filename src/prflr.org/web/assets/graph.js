@@ -58,25 +58,26 @@ function drawTimerGraph(graphData, containerId) {
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(data, {
+    chart.draw(data, google.charts.Line.convertOptions({
         width: 900, 
         height: 500, 
         min: 0, 
         curveType: 'function',
         legend: { position: 'bottom' },
-        chartArea: {}, 
+        chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
         interpolateNulls: true, 
         series: {
             0: { color: '#0000FF' },
             1: { color: '#00FF00' },
-            2: { color: '#FF0000' }
+            2: { axis: 'Temps', color: '#FF0000' }
         },
         axes: {
           y: {
-            2: {label: 'Time, ms'},
+            'Temps': {label: 'Time, ms'},
           }
         }
-    });
+    })
+    );
 }
 
 function formatGraphDate(date) {
