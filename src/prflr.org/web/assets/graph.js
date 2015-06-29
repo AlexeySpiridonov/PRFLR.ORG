@@ -1,4 +1,4 @@
-google.load('visualization', '1.1', {packages: ['corechart', 'imagelinechart']});
+google.load('visualization', '1.1', {packages: ['corechart', 'line', 'imagelinechart']});
 
 function drawGraph(graphData, title, containerId) {
     if (graphData == null || graphData.length <= 0) {
