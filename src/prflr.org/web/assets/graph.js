@@ -73,7 +73,7 @@ function drawTimerGraph(graphData, containerId) {
         },
         axes: {
           y: {
-            'Temps': {label: 'Time, ms'},
+            'Temps': {label: 'Time, ms'}
           }
         }
     })
