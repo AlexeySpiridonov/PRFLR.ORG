@@ -49,6 +49,7 @@ function drawTimerGraph(graphData, containerId) {
     data.addColumn('number', 'Min');
     data.addColumn('number', 'Avg');
     data.addColumn('number', 'Max');
+    data.addColumn('number', 'TPS');
 
     data.addRows(graphData.Avg.length);
 
