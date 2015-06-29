@@ -29,7 +29,7 @@ function drawGraph(graphData, title, containerId) {
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(dataTable, {width: 1500, height: 800, min: 0, interpolateNulls: true});
+    chart.draw(dataTable, {width: 1500, height: 500, min: 0, interpolateNulls: true});
 }
 
 function drawTimerGraph(graphData, containerId) {
@@ -58,11 +58,25 @@ function drawTimerGraph(graphData, containerId) {
     }
 
     var chart = new google.visualization.LineChart(document.getElementById(containerId));
-    chart.draw(data, {width: 1500, height: 800, min: 0, interpolateNulls: true, series: {
-        0: { color: '#0000FF' },
-        1: { color: '#00FF00' },
-        2: { color: '#FF0000' }
-    }});
+    chart.draw(data, {
+        width: 90, 
+        height: 500, 
+        min: 0, 
+        curveType: 'function',
+        legend: { position: 'bottom' },
+        chartArea: {}, 
+        interpolateNulls: true, 
+        series: {
+            0: { color: '#0000FF' },
+            1: { color: '#00FF00' },
+            2: { color: '#FF0000' }
+        },
+        axes: {
+          y: {
+            2: {label: 'Time, ms'},
+          }
+        }
+    });
 }
 
 function formatGraphDate(date) {
