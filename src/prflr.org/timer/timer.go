@@ -175,8 +175,10 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         resultsMap[stat.Timestamp] = stat
     }
 
-    // Add Zeros
+     // Add Zeros
     if len(results) > 0 {
+        // Sort by TS
+        sort.Sort(StatTimestampSorter(results))
         minTS := results[0].Timestamp
         maxTS := results[len(results)-1].Timestamp
 
@@ -185,12 +187,10 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
                 resultsMap[i] = Stat{Timestamp: i, Count: 0, Avg: 0, Min: 0, Max: 0}
             }
         }
-
-        // Sort by TS
-        //sort.Sort(StatTimestampSorter(results))
     }
 
-    k := int64(len(results) / 500)
+    //k := int64(len(results) / 500)
+    k := int64(len(resultsMap) / 500)
     if k <= 0 {
         k = 1
     }
