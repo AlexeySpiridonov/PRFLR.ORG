@@ -69,6 +69,14 @@ function drawTimerGraph(graphData, containerId) {
         //width: 1200, 
         height: 500, 
         min: 0, 
+        explorer: {},
+        selectionMode: 'multiple',
+  // Trigger tooltips
+  // on selections.
+  tooltip: {trigger: 'selection'},
+  // Group selections
+  // by x-value.
+  aggregationTarget: 'category',
         curveType: 'function',
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
         interpolateNulls: true,
