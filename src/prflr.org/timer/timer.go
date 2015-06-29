@@ -215,7 +215,10 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         var min = float32(99999999)
         var max = float32(0)
         for _, stat := range statData {
-            count += stat.Count
+            //count += stat.Count
+            if count < stat.Count {
+                count = stat.Count
+            }
             median = append(median, stat.Avg)
             if min > stat.Min {
                 min = stat.Min
@@ -237,7 +240,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         }
 
         ts := key * k
-        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count/len(statData), Avg: timerMedian, Min: min, Max: max})
+        normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count /*count/len(statData)*/, Avg: timerMedian, Min: min, Max: max})
     }
 
     sort.Sort(StatTimestampSorter(normalizedResults))
