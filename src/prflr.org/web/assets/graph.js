@@ -69,7 +69,6 @@ function drawTimerGraph(graphData, containerId) {
         //width: 1200, 
         height: 500, 
         min: 0, 
-        explorer: {},
         tooltip: { trigger: 'selection' },
         aggregationTarget: 'series',
         curveType: 'function',
