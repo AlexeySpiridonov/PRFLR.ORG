@@ -35,7 +35,7 @@ function drawGraph(graphData, title, containerId) {
             height: 500, 
             min: 0, 
             interpolateNulls: true,
-            curveType: 'function',
+            curveType: 'none',
             chartArea: {left:0,top:0,width:'100%',height:'100%'}
         }
     ));
@@ -69,7 +69,7 @@ function drawTimerGraph(graphData, containerId) {
         //width: 1200, 
         height: 500, 
         min: 0, 
-        curveType: 'function',
+        curveType: 'none',
         chartArea: {left:0,top:0,width:'100%',height:'100%'}, 
         interpolateNulls: true,
         colors: ['blue', 'green', 'red'], 
