@@ -6,6 +6,7 @@ import (
     "prflr.org/timer"
     "prflr.org/mailer"
     "prflr.org/urlHelper"
+    "prflr.org/stringHelper"
     "prflr.org/PRFLRLogger"
     "labix.org/v2/mgo/bson"
     "encoding/json"
@@ -82,7 +83,8 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
             PRFLRLogger.Error(err)
         }
 
-        tplVars["user"] = user
+        tplVars["user"]   = user
+        tplVars["ApiKey"] = stringHelper.GetApiIDForApiKey(user.ApiKey)
 
         t.Execute(w, tplVars)
     }
@@ -431,7 +433,7 @@ func sendRegistrationEmail(user *user.User) error {
 
     "Email: " + user.Email + "\n"+
     "Pass: "  + user.Password + "\n"+
-    "API Key: " + user.ApiKey + "\n\n"+
+    "API Key: " + stringHelper.GetApiIDForApiKey(user.ApiKey) + "\n\n"+
 
     "Following links are for the SDK Integration into your application:\n\n"+
 

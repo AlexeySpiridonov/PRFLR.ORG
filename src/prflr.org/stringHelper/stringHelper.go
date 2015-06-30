@@ -3,6 +3,7 @@ package stringHelper
 import (
     "crypto/rand"
     "math/big"
+    "prflr.org/config"
 )
 
 func RandomString(n int) string {
@@ -38,4 +39,8 @@ func GetCappedCollectionNameForApiKey(apiKey string) string {
     }
 
     return collectionName
+}
+
+func GetApiIDForApiKey(apiKey string) string {
+    return apiKey + "@" + config.DomainName + config.UDPPort
 }
