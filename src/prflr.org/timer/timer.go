@@ -71,7 +71,7 @@ func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
 
     //TODO add criteria builder
     criteria["apikey"] = apiKey
-    err = dbc.Find(criteria).Sort("-_id").Limit(100).All(&results)
+    err = dbc.Find(criteria).Sort("-_id").Limit(300).All(&results)
 
     return &results, err
 }
