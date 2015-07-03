@@ -42,5 +42,5 @@ func GetCappedCollectionNameForApiKey(apiKey string) string {
 }
 
 func GetApiIDForApiKey(apiKey string) string {
-    return apiKey + "@" + config.DomainName + config.UDPPort
+    return "prflr://" + apiKey + "@" + config.DomainName + config.UDPPort
 }
