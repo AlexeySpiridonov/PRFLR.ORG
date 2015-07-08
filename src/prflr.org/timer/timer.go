@@ -150,10 +150,9 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
 
     // criteria
     criteria["apikey"] = apiKey
-    /*criteria := map[string]string {
-        "apikey": apiKey,
-        "src": "node1.mag.ndmsystems.com",
-    }*/
+    if _, ok := criteria["timestamp"]; !ok {
+        criteria["timestamp"] = &bson.M{"$gte": time.Now().Unix() - (86400*30)} // last month
+    }
 
     group := bson.M{"$group": grouplist}
     Sort  := bson.M{"$sort" : bson.M{"timestamp": 1}}
@@ -186,7 +185,7 @@ zerosStart := time.Now().UnixNano()
         sort.Sort(StatTimestampSorter(results))
         minTS := results[0].Timestamp
         maxTS := results[len(results)-1].Timestamp
-
+fmt.Println("Adding zeros: ", maxTS - minTS)
         for i := minTS; i <= maxTS; i++ {
             if _, found := resultsMap[i]; !found {
                 resultsMap[i] = Stat{Timestamp: i, Count: 0, Avg: 0, Min: 0, Max: 0}
