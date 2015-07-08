@@ -6,8 +6,8 @@ import(
     "prflr.org/db"
     "labix.org/v2/mgo/bson"
     "sort"
-    //"fmt"
-    //"strconv"
+    "fmt"
+    "time"
 )
 
 /**
@@ -161,22 +161,27 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     //limit := bson.M{"$limit": 100000}
     aggregate := []bson.M{match, Sort, /*limit,*/ group}
 
+mongoStart := time.Now().UnixNano()
     err = dbc.Pipe(aggregate).All(&results)
+fmt.Println("Mongo query time: ", time.Now().UnixNano() - mongoStart)
     if err != nil {
         return nil, err
     }
 
     // Reformat Result to String-Keys Map
     resultsMap := make(map[int64]Stat)
+reformatStart := time.Now().UnixNano()
     for _, stat := range results {
         if stat.Timestamp <= 0 {
             continue
         }
         resultsMap[stat.Timestamp] = stat
     }
+fmt.Println("Reformat time: ", time.Now().UnixNano() - reformatStart)
 
      // Add Zeros
     if len(results) > 0 {
+zerosStart := time.Now().UnixNano()
         // Sort by TS
         sort.Sort(StatTimestampSorter(results))
         minTS := results[0].Timestamp
@@ -187,6 +192,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
                 resultsMap[i] = Stat{Timestamp: i, Count: 0, Avg: 0, Min: 0, Max: 0}
             }
         }
+fmt.Println("Zeros time: ", time.Now().UnixNano() - zerosStart)
     }
 
     //k := int64(len(results) / 500)
@@ -196,6 +202,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
     }
 
     var normalizedResultsData = make(map[int64][]Stat)
+normalizeStart := time.Now().UnixNano()
     for _, stat := range resultsMap {
         if stat.Timestamp <= 0 {
             continue
@@ -208,7 +215,9 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
             //fmt.Println(normalizedResultsData[key])
         }
     }
+fmt.Println("Normalize time: ", time.Now().UnixNano() - normalizeStart)
     var normalizedResults []Stat
+formatStart := time.Now().UnixNano()
     for key, statData := range normalizedResultsData {
         var count  = 0
         var median []float32
@@ -242,6 +251,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
         ts := key * k
         normalizedResults = append(normalizedResults, Stat{Timestamp: ts, Count: count /*count/len(statData)*/, Avg: timerMedian, Min: min, Max: max})
     }
+fmt.Println("Format time: ", time.Now().UnixNano() - formatStart)
 
     sort.Sort(StatTimestampSorter(normalizedResults))
 
