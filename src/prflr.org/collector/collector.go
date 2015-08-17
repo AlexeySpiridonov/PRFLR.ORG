@@ -106,9 +106,9 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
     apiKey      := ""
     apiKeyParts := strings.Split(fields[5], "://")
     if len(apiKey) > 1 {
-        apiKey = apiKeyParts[0]
-    } else {
         apiKey = apiKeyParts[1]
+    } else {
+        apiKey = apiKeyParts[0]
     }
 
     // Validate Duration
