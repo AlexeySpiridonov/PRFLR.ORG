@@ -102,6 +102,15 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
         return nil, errors.New("Invalid format: Api Key field is not specified: " + msg)
     }
 
+    // cut protocol from API Key if any
+    apiKey      := ""
+    apiKeyParts := strings.Split(fields[5], "://")
+    if len(apiKey) > 1 {
+        apiKey = apiKeyParts[0]
+    } else {
+        apiKey = apiKeyParts[1]
+    }
+
     // Validate Duration
     time, err := strconv.ParseFloat(fields[3], 32)
     if err != nil {
@@ -110,5 +119,5 @@ func parseStringToTimer(msg string) (*timer.Timer, error) {
     }
 
     //TODO add check for apikey and crop for fields lenght
-    return &timer.Timer{Thrd: fields[0], Src: fields[1], Timer: fields[2], Time: float32(time), Info: fields[4], Apikey: fields[5]}, nil
+    return &timer.Timer{Thrd: fields[0], Src: fields[1], Timer: fields[2], Time: float32(time), Info: fields[4], Apikey: apiKey}, nil
 }
