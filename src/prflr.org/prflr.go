@@ -3,6 +3,7 @@ package main
 import (
     "prflr.org/collector"
     "prflr.org/web"
+    "github.com/yvasiyarov/gorelic"
 )
 
 func main() {
