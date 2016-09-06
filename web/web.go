@@ -22,7 +22,7 @@ import (
 var log = logging.MustGetLogger("web")
 
 // compile all templates and cache them
-//var templates = template.Must(template.ParseGlob(config.BaseDir + "web/assets/landing/*.html"))
+//var templates = template.Must(template.ParseGlob(config.BaseDir + "assets/landing/*.html"))
 
 func Start() {
 	/* Starting Web Server */
@@ -63,9 +63,9 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
 		// ok, no user then show Auth Page
 		t, err := template.ParseFiles(
-			config.BaseDir+"web/assets/index.html",
-			config.BaseDir+"web/assets/landing/header.html",
-			config.BaseDir+"web/assets/landing/footer.html",
+			config.BaseDir+"assets/index.html",
+			config.BaseDir+"assets/landing/header.html",
+			config.BaseDir+"assets/landing/footer.html",
 		)
 		if err != nil {
 			log.Error(err.Error())
@@ -78,7 +78,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// we have user!
 		// let's show Web Panel for this user
-		t, err := template.ParseFiles(config.BaseDir + "web/assets/main.html")
+		t, err := template.ParseFiles(config.BaseDir + "assets/main.html")
 		if err != nil {
 			log.Error(err.Error())
 		}
@@ -125,9 +125,9 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 
 	// ok, no user then show Auth Page
 	t, err := template.ParseFiles(
-		config.BaseDir+"web/assets/register.html",
-		config.BaseDir+"web/assets/landing/header.html",
-		config.BaseDir+"web/assets/landing/footer.html",
+		config.BaseDir+"assets/register.html",
+		config.BaseDir+"assets/landing/header.html",
+		config.BaseDir+"assets/landing/footer.html",
 	)
 	if err != nil {
 		log.Error(err.Error())
@@ -158,9 +158,9 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// ok, no user then show Auth Page
 	t, err := template.ParseFiles(
-		config.BaseDir+"web/assets/login.html",
-		config.BaseDir+"web/assets/landing/header.html",
-		config.BaseDir+"web/assets/landing/footer.html",
+		config.BaseDir+"assets/login.html",
+		config.BaseDir+"assets/landing/header.html",
+		config.BaseDir+"assets/landing/footer.html",
 	)
 	if err != nil {
 		log.Error(err.Error())
@@ -188,9 +188,9 @@ func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.ParseFiles(
-		config.BaseDir+"web/assets/forgotPassword.html",
-		config.BaseDir+"web/assets/landing/header.html",
-		config.BaseDir+"web/assets/landing/footer.html",
+		config.BaseDir+"assets/forgotPassword.html",
+		config.BaseDir+"assets/landing/header.html",
+		config.BaseDir+"assets/landing/footer.html",
 	)
 	if err != nil {
 		log.Error(err.Error())
@@ -201,18 +201,18 @@ func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 }
 func passwordRecoveredHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles(
-		config.BaseDir+"web/assets/passwordRecovered.html",
-		config.BaseDir+"web/assets/landing/header.html",
-		config.BaseDir+"web/assets/landing/footer.html",
+		config.BaseDir+"assets/passwordRecovered.html",
+		config.BaseDir+"assets/landing/header.html",
+		config.BaseDir+"assets/landing/footer.html",
 	)
 	t.Execute(w, nil)
 }
 
 func thankyouHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles(
-		config.BaseDir+"web/assets/thankyou.html",
-		config.BaseDir+"web/assets/landing/header.html",
-		config.BaseDir+"web/assets/landing/footer.html",
+		config.BaseDir+"assets/thankyou.html",
+		config.BaseDir+"assets/landing/header.html",
+		config.BaseDir+"assets/landing/footer.html",
 	)
 	t.Execute(w, nil)
 }

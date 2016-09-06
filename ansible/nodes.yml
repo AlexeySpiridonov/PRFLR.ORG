@@ -1,15 +1,15 @@
 ---
-production_nodes_list:
-  node1:
+prod_nodes_list:
+  prod:
     name: prflr.org
-    ip:
+    ip:   188.40.91.78
     dist: ubuntu
     os:   linux #[linux|darwin|windows]
     arch: amd64 #[amd64|385|arm]
 dev_nodes_list:
-  dev1:
+  dev:
     name: prflr.org
-    ip:   139.59.153.192
+    ip:   188.40.91.78
     dist: ubuntu
     os:   linux
     arch: amd64

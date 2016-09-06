@@ -1,4 +1,4 @@
-check process PRFLR_prod{{index}}
-	matching "PRFLR_prod{{index}}"
-	start program = "/bin/bash -c 'cd {{ GOPATH }} && nohup ./PRFLR_prod{{index}} > /dev/null 2>&1 &'"
-	stop program = "/usr/bin/pkill -9 -x PRFLR_prod{{index}}"
+check process PRFLR_prod
+	matching "PRFLR_prod"
+	start program = "/bin/bash -c 'cd {{ GOPATH }}/src/PRFLR && nohup ./PRFLR_prod > /dev/null 2>&1 &'"
+	stop program = "/usr/bin/pkill -9 -x PRFLR_prod"
