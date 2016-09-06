@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"../config"
+	"PRFLR.ORG/config"
 	"crypto/rand"
 	"math/big"
 )

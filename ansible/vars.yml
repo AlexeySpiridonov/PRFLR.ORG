@@ -3,8 +3,7 @@ ProjectName: PRFLR.ORG
 ProjectPath: src/PRFLR.ORG
 
 ProjectRepo: git@github.com:AlexeySpiridonov/PRFLR.ORG
-LOCAL_GOPATH: "{{ lookup('env', 'HOME')}}/golang"
-GOPATH: "{{ ansible_env.HOME }}/go"
+GOPATH: "{{ lookup('env', 'GOPATH')}}"
 UseGIT: "{{usegit|default(True)}}"
 CheckDependencyLibs: "{{checkdep|default(True)}}"
 EnsureRunning: "{{ensure|default(True)}}"

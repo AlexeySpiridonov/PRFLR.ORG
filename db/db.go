@@ -1,7 +1,7 @@
 package db
 
 import (
-	"../config"
+	"PRFLR.ORG/config"
 	"github.com/op/go-logging"
 	"labix.org/v2/mgo"
 )

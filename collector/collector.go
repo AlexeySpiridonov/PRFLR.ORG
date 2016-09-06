@@ -1,9 +1,9 @@
 package collector
 
 import (
-	"../config"
-	"../db"
-	"../timer"
+	"PRFLR.ORG/config"
+	"PRFLR.ORG/db"
+	"PRFLR.ORG/timer"
 	"errors"
 	"github.com/op/go-logging"
 	"net"

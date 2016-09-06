@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./collector"
-	"./web"
+	"PRFLR.ORG/collector"
+	"PRFLR.ORG/web"
 	"github.com/op/go-logging"
 	"github.com/yvasiyarov/gorelic"
 	"os"
@@ -53,7 +53,7 @@ func initLogs() {
 	//	log3Leveled.SetLevel(logging.INFO, "")
 	//	logging.SetBackend(log3Leveled)
 	//} else {
-		logging.SetBackend(log1F, log2F, log3LeveledF)
+	logging.SetBackend(log1F, log2F, log3LeveledF)
 	//}
 
 	log.Info("Logs ok")

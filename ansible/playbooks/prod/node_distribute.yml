@@ -8,7 +8,7 @@
   tasks:
   # Distribute!
   - name: Move compiled binary to Remote Machine GOPATH dir
-    copy: src={{ LOCAL_GOPATH }}/PRFLR_{{inventory_hostname}} dest={{ GOPATH }}/src/PRFLR/PRFLR_{{inventory_hostname}} mode=0744
+    copy: src={{ LOCAL_GOPATH }}/src/PRFLR.ORG/PRFLR_{{inventory_hostname}} dest={{ GOPATH }}/src/PRFLR/PRFLR_{{inventory_hostname}} mode=0744
 
   - name: Move assets dir to Remote Machine GOPATH assets dir
     copy: src={{ LOCAL_GOPATH }}/src/PRFLR.ORG/assets/ dest={{ GOPATH }}/src/PRFLR/assets/

@@ -1,9 +1,9 @@
 package timer
 
 import (
-	"../config"
-	"../db"
-	"../helpers"
+	"PRFLR.ORG/config"
+	"PRFLR.ORG/db"
+	"PRFLR.ORG/helpers"
 	"fmt"
 	"labix.org/v2/mgo/bson"
 	"sort"
