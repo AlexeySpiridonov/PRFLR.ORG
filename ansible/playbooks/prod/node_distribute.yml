@@ -1,0 +1,30 @@
+---
+- name: Distribute compiled binaries across all PROD Nodes
+  hosts: dev
+  vars_files:
+    - ../../vars.yml
+    - ../../nodes.yml
+  gather_facts: True
+  tasks:
+  # Distribute!
+  - name: Move compiled binary to Remote Machine GOPATH dir
+    copy: src={{ LOCAL_GOPATH }}/PRFLR_{{inventory_hostname}} dest={{ GOPATH }}/PRFLR_{{inventory_hostname}} mode=0744
+
+  - name: Move assets dir to Remote Machine GOPATH assets dir
+    copy: src={{ LOCAL_GOPATH }}/src/PRFLR/assets/ dest={{ GOPATH }}/assets/
+
+  - name: Deliver monit script
+    template: src=../../templates/monit/PRFLR_prod.j2 dest=/etc/monit/conf.d/PRFLR_prod mode=0644
+
+  # Run!
+
+  ## stop monit
+  - name: Stop monit
+    service: name=monit state=stopped
+
+  - name: Kill previous process (if any)
+    shell: kill -9 $(ps -ef|grep "PRFLR_{{inventory_hostname}}"|grep -v "grep"|awk '{print $2}') || true
+
+  ## start monit
+  - name: Start monit
+    service: name=monit state=started

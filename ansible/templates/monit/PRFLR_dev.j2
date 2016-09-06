@@ -1,0 +1,4 @@
+check process PRFLR_dev{{index}}
+	matching "PRFLR_dev{{index}}"
+	start program = "/bin/bash -c 'cd {{ GOPATH }} && nohup ./PRFLR_dev{{index}} > /dev/null 2>&1 &'"
+	stop program = "/usr/bin/pkill -9 -x PRFLR_dev{{index}}"
