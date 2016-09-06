@@ -26,9 +26,9 @@ var log = logging.MustGetLogger("web")
 
 func Start() {
 	/* Starting Web Server */
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(config.BaseDir+"web/assets"))))
-	http.Handle("/assets/landing/", http.StripPrefix("/assets/landing/", http.FileServer(http.Dir(config.BaseDir+"web/assets/landing"))))
-	http.Handle("/favicon.ico", http.FileServer(http.Dir(config.BaseDir+"web/assets"))) //cool code for favicon! :) it's very important!
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(config.BaseDir+"assets"))))
+	http.Handle("/assets/landing/", http.StripPrefix("/assets/landing/", http.FileServer(http.Dir(config.BaseDir+"assets/landing"))))
+	http.Handle("/favicon.ico", http.FileServer(http.Dir(config.BaseDir+"assets"))) //cool code for favicon! :) it's very important!
 	http.HandleFunc("/last/", lastHandler)
 	http.HandleFunc("/aggregate/", aggregateHandler)
 	http.HandleFunc("/graph/", graphHandler)
