@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>PRFLR</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="/assets/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/assets/prflr.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="/assets/graph.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/main.css" />
+</head>
+<body>
+    <div>
+        <div class="userPanel">
+            <div class="userPanelName">{{.user.Name}}</div>
+            <div class="userPanelLogout"><a href="/logout" onClick="return Logout();">Logout</a>&nbsp;</div>
+        </div>
+        <table>
+            <td width="250">
+                <img src="/assets/prflr.gif" style="padding-left: 32px"/>
+            </td>
+            <td>
+                <div id="tab_menu">
+                    <a href="#aggregate" class="tabselected">Statistic</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#graph">Graph</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#last">Raw Timers</a>
+                    <!-- | <a href="#slow">SlowTop</a> | <a href="#source">Sources</a> | -->
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#settings">Settings</a>
+                    
+                </div>
+            </td>
+        </table>
+        <div style="padding:15px;">
+
+            <!-- RAW TIMERS -->
+            <div id="last" class="profiler_block">
+                <!--<h1>Raw Timers</h1>-->
+                <form action="/last" method="GET" onsubmit="$(this).find('.refresh_button').click();return false">
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                        <tr>
+                            <td class='r0 f15'></td>
+                            <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
+                            <td class="r2 f30"></td>
+                            <td class="r3"></td>
+                            <td class="r4 f18">
+                                Time<br/>&nbsp;
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="r0 resetFilter">#>&nbsp;</td>
+                            <td>
+                                <input name="filter" class='cp' value="*/*/*/*" />
+                            </td>
+                            <td><button class="refresh_button">Refresh</button></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='r0'></td>
+                            <td></td>
+                            <td>&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='b0'></td>
+                            <td colspan="4">
+                                <table class="m profiler_grid t100" border="0" cellpadding="0" cellspacing="0"></table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div> <!-- END OF last -->
+
+            <!-- STATISTIC -->
+            <div id="aggregate" class="profiler_block">
+                <form action="/aggregate" method="GET" onsubmit="$(this).find('.refresh_button').click();return false">
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                        <tr>
+                            <td class='r0 f15'></td>
+                            <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
+                            <td class="r2 f30">Statistic</td>
+                            <td class="r3"></td>
+                            <td class="r4 f18">
+                                Total<br/>
+                                Count
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="r0 resetFilter">#>&nbsp;</td>
+                            <td>
+                                <input name="filter" class='cp' value="*/*/*/*" />
+                            </td>
+                            <td align="left">
+                                Sort By: 
+                                <select style="width:160px;" name="sortby">
+                                    <option value="max">Max Time (red)</option>
+                                    <option value="avg">Avg Time (green)</option>
+                                    <option value="min">Min Time (blue)</option>
+                                    <option value="total">Total Time</option>
+                                    <option value="count">Count</option>
+                                    <!--option value="dispersion">Dispersion</option-->
+                                </select>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='r0'></td>
+                            <td align="right">
+                                <div style="padding-right:75px;">
+                                    Group By: 
+                                    <select style="width:200px;" name="groupby">
+                                        <option value="src,timer">Source + Timer</option>
+                                        <option value="src,magic">Source</option>
+                                        <option value="magic,timer">Timer</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td><button class="refresh_button">Refresh</button></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='b0'></td>
+                            <td colspan="4">
+                                <table class="m profiler_grid t100" border="0" cellpadding="0" cellspacing="0"></table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div> <!-- END OF agg -->
+
+            <!-- GRAPH -->
+            <div id="graph" class="profiler_block">
+                <form action="/graph" method="GET" onsubmit="$('#refresh_graph_button').click();return false">
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                        <tr>
+                            <td class='r0 f15'></td>
+                            <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
+                            <td class="r2 f30"></td>
+                            <td class="r3"></td>
+                            <td class="r4 f18">&nbsp;<br/>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="r0 resetFilter" style="vertical-align: top;padding-top: 11px;">#>&nbsp;</td>
+                            <td>
+                                <input name="filter" class='cp' value="*/*/*/*" />
+                            </td>
+                            <td><button id="refresh_graph_button">Refresh</button></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='r0'></td>
+                            <td style="text-align:right; padding:10px 50px 0 0;">
+                                From:&nbsp;<input name="start" /> &nbsp;&nbsp;&nbsp; To:&nbsp;<input name="end" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class='b0'></td>
+                            <td colspan="4">
+                                <div id="graph_container_avg"></div>
+                                <div id="graph_container_tps"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div> <!-- END OF GRAPH -->
+
+            <!-- SETTINGS -->
+            <div id="settings" class="profiler_block">
+                <h1>Settings</h1>
+                <b>Your Name</b> {{.user.Name}}</br>
+                <b>Email</b> {{.user.Email}} </br>
+                <b>Password</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
+                <b>ApiKey</b> {{.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
+                <b>Storage:</b> 1 000 000 timers / 200Mb. <br/> - - - To increase your storage please contact us (<a href="email:info@prflr.org">info@prflr.org</a>). This option costs $30 a month.</br>
+
+                <br/><br/><br/>
+                <div style="width:50%;border-bottom:1px solid black"></div>
+                <br/><br/>
+
+                <button id="removeDataButton">Remove data</button><br/><br/>
+                <div id="removeDataButtonHint">
+                    * Clicking this button will remove currently stored Timers (data you have sent to PRFLR).<br/>
+                    It might be helpful if you are improving your application performance and previously stored Timers would mess up the result.
+                </div>
+
+            </div> <!-- END OF settings -->
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <center>
+        <br/><br/><br/>
+        <a href="https://github.com/PRFLR/SDK/blob/master/README.md">WTF is PRFLR</a> |
+        <a href="https://github.com/PRFLR/SDK">SDK Download</a> |
+        <a href="https://plus.google.com/u/1/communities/102923187187019370827">Community</a>
+        <br/><br/>
+        &copy; <a href="https://github.com/PRFLR?tab=members">PRFLR TEAM</a> <script>document.write((new Date()).getFullYear())</script>
+        <br/><br/>
+    </center>
+    <br/><br/>
+</center>
+<script type="text/javascript">        
+var inProgress    = false;     
+var lineBarLength = 265;       
+       
+$(document).ready(function(){      
+    start();       
+});        
+         
+</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter24124810 = new Ya.Metrika({id:24124810,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true});
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/24124810" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+</body>
+</html>
