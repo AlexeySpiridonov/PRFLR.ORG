@@ -6,20 +6,18 @@
     - ../../nodes.yml
   gather_facts: False
   tasks:
-  # Check!
+
   - name: Ensure GoLang libs...
     shell: go get
     when: CheckDependencyLibs
 
-  # Update!
   - name: Update Source Code
     shell: cd {{ GOPATH }}/{{ ProjectPath }} && git pull
     when: UseGIT
 
   # Build!
-  # Notice:
   #   please run the following to enable cross-compile feature in your GoLang ENV:
   #   $ sudo cd /usr/local/go/src && GOOS=linux GOARCH=amd64 ./make.bash --no-clean
   - name: Compile for each node...
-    shell: "cd {{ GOPATH }}/{{ ProjectPath }} && export GOPATH={{LOCAL_GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} ./prflr.go"
+    shell: "cd {{ GOPATH }}/{{ ProjectPath }} && export GOPATH={{GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} ./prflr.go"
     with_dict: "{{ prod_nodes_list }}"

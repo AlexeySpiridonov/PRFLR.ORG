@@ -1,4 +1,4 @@
 check process PRFLR_prod
 	matching "PRFLR_prod"
-	start program = "/bin/bash -c 'cd {{ GOPATH }}/src/PRFLR && nohup ./PRFLR_prod > /dev/null 2>&1 &'"
+	start program = "/bin/bash -c 'cd /root/go/src/PRFLR && nohup ./PRFLR_prod > /dev/null 2>&1 &'"
 	stop program = "/usr/bin/pkill -9 -x PRFLR_prod"
