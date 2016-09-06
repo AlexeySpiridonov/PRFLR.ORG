@@ -3,9 +3,8 @@ package web
 import (
 	"../config"
 	"../mailer"
-	"../stringHelper"
+	"../helpers"
 	"../timer"
-	"../urlHelper"
 	"../user"
 	"encoding/json"
 	"errors"
@@ -58,7 +57,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		// auth successful?..
 		loginErr := auth(email, pass, w)
 		if loginErr == nil {
-			http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
+			http.Redirect(w, r, helpers.GenerateUrl("/"), http.StatusFound)
 		}
 
 		// ok, no user then show Auth Page
@@ -84,7 +83,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		tplVars["user"] = user
-		tplVars["ApiKey"] = stringHelper.GetApiIDForApiKey(user.ApiKey)
+		tplVars["ApiKey"] = helpers.GetApiIDForApiKey(user.ApiKey)
 
 		t.Execute(w, tplVars)
 	}
@@ -118,7 +117,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 			go sendRegistrationEmail(user)
 
 			// Getting Hell out of here!!! Whheeeee!!!!111 =)
-			http.Redirect(w, r, urlHelper.GenerateUrl("/thankyou"), http.StatusFound)
+			http.Redirect(w, r, helpers.GenerateUrl("/thankyou"), http.StatusFound)
 		}
 		tplVars["registerErr"] = registerErr
 	}
@@ -150,7 +149,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		// auth successful?..
 		loginErr := auth(email, pass, w)
 		if loginErr == nil {
-			http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
+			http.Redirect(w, r, helpers.GenerateUrl("/"), http.StatusFound)
 		}
 
 		tplVars["loginErr"] = loginErr
@@ -182,7 +181,7 @@ func forgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		user, recoveryErr := recoverPassword(email)
 		if recoveryErr == nil {
 			go sendRecoveryEmail(user)
-			http.Redirect(w, r, urlHelper.GenerateUrl("/passwordRecovered"), http.StatusFound)
+			http.Redirect(w, r, helpers.GenerateUrl("/passwordRecovered"), http.StatusFound)
 		}
 		tplVars["recoveryErr"] = recoveryErr
 	}
@@ -233,8 +232,8 @@ func resetApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		//timer.SetApiKey(oldApiKey, user.ApiKey)
 	}
 
-	// @TODO: make a urlHelper for generating URLs !!!
-	http.Redirect(w, r, urlHelper.GenerateUrl("#settings"), http.StatusFound)
+	// @TODO: make a helpers for generating URLs !!!
+	http.Redirect(w, r, helpers.GenerateUrl("#settings"), http.StatusFound)
 }
 
 func removeDataHandler(w http.ResponseWriter, r *http.Request) {
@@ -252,7 +251,7 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	user.GetCurrentUser(r)
 	user.Logout(w)
 
-	http.Redirect(w, r, urlHelper.GenerateUrl("/"), http.StatusFound)
+	http.Redirect(w, r, helpers.GenerateUrl("/"), http.StatusFound)
 }
 
 func lastHandler(w http.ResponseWriter, r *http.Request) {
@@ -433,7 +432,7 @@ func sendRegistrationEmail(user *user.User) error {
 
 		"Email: " + user.Email + "\n" +
 		"Pass: " + user.Password + "\n" +
-		"API Key: " + stringHelper.GetApiIDForApiKey(user.ApiKey) + "\n\n" +
+		"API Key: " + helpers.GetApiIDForApiKey(user.ApiKey) + "\n\n" +
 
 		"Following links are for the SDK Integration into your application:\n\n" +
 

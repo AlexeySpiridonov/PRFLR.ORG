@@ -3,7 +3,7 @@ package timer
 import (
 	"../config"
 	"../db"
-	"../stringHelper"
+	"../helpers"
 	"fmt"
 	"labix.org/v2/mgo/bson"
 	"sort"
@@ -62,7 +62,7 @@ func GetList(apiKey string, criteria map[string]interface{}) (*[]Timer, error) {
 	}
 	defer session.Close()
 
-	collectionName := stringHelper.GetCappedCollectionNameForApiKey(apiKey)
+	collectionName := helpers.GetCappedCollectionNameForApiKey(apiKey)
 
 	db := session.DB(config.DBName)
 	dbc := db.C(collectionName)
@@ -85,7 +85,7 @@ func Aggregate(apiKey string, criteria map[string]interface{}, groupBy map[strin
 	}
 	defer session.Close()
 
-	collectionName := stringHelper.GetCappedCollectionNameForApiKey(apiKey)
+	collectionName := helpers.GetCappedCollectionNameForApiKey(apiKey)
 
 	db := session.DB(config.DBName)
 	dbc := db.C(collectionName)
@@ -128,7 +128,7 @@ func FormatGraph(apiKey string, criteria map[string]interface{}) (*Graph, error)
 	}
 	defer session.Close()
 
-	collectionName := stringHelper.GetCappedCollectionNameForApiKey(apiKey)
+	collectionName := helpers.GetCappedCollectionNameForApiKey(apiKey)
 
 	db := session.DB(config.DBName)
 	dbc := db.C(collectionName)
@@ -298,7 +298,7 @@ func (timer *Timer) Save() error {
 	defer session.Close()
 
 	// define User's Collection Name to Save Timers to
-	collectionName := stringHelper.GetCappedCollectionNameForApiKey(timer.Apikey)
+	collectionName := helpers.GetCappedCollectionNameForApiKey(timer.Apikey)
 
 	db2 := session.DB(config.DBName)
 	dbc := db2.C(collectionName)

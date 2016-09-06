@@ -1,5 +1,2 @@
 [prod]
 prod   ansible_connection=ssh  ansible_ssh_host=prflr.org   ansible_ssh_user=root	host_name=prflr.org	vm=0	branch=master	index=1
-
-[dev]
-dev	ansible_connection=ssh  ansible_ssh_host=prflr.org	 	ansible_ssh_user=root	host_name=prflr.org	vm=1	branch=master	index=1

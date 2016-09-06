@@ -8,8 +8,7 @@
   tasks:
   # Check!
   - name: Ensure GoLang libs...
-    shell: export GOPATH={{ LOCAL_GOPATH }} && go get {{ item }}
-    with_items: GOPackages
+    shell: export GOPATH={{ LOCAL_GOPATH }} && go get
     when: CheckDependencyLibs
 
   # Update!
@@ -23,8 +22,8 @@
   #   $ sudo cd /usr/local/go/src && GOOS=linux GOARCH=amd64 ./make.bash --no-clean
   - name: Compile for each node...
     shell: "cd {{ LOCAL_GOPATH }}/{{ ProjectPath }}/ && export GOPATH={{LOCAL_GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} ./prflr.go"
-    with_dict: prod_nodes_list
+    with_dict: "{{ prod_nodes_list }}"
 
   - name: Move compiled binary to Local GOPATH dir
     copy: src={{ LOCAL_GOPATH }}/{{ ProjectPath }}/PRFLR_{{item.key}} dest={{ LOCAL_GOPATH }}/PRFLR_{{item.key}} mode=0744
-    with_dict: prod_nodes_list
+    with_dict: "{{ prod_nodes_list }}"

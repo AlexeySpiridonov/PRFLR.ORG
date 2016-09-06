@@ -8,8 +8,3 @@ GOPATH: "{{ ansible_env.HOME }}/go"
 UseGIT: "{{usegit|default(True)}}"
 CheckDependencyLibs: "{{checkdep|default(True)}}"
 EnsureRunning: "{{ensure|default(True)}}"
-
-GOPackages:
-  - gopkg.in/mgo.v2
-  - github.com/op/go-logging
-  - github.com/yvasiyarov/gorelic

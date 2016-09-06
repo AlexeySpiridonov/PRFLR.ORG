@@ -6,10 +6,3 @@ prod_nodes_list:
     dist: ubuntu
     os:   linux #[linux|darwin|windows]
     arch: amd64 #[amd64|385|arm]
-dev_nodes_list:
-  dev:
-    name: prflr.org
-    ip:   188.40.91.78
-    dist: ubuntu
-    os:   linux
-    arch: amd64

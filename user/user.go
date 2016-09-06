@@ -3,7 +3,7 @@ package user
 import (
 	"../config"
 	"../db"
-	"../stringHelper"
+	"../helpers"
 	"errors"
 	"github.com/op/go-logging"
 	"labix.org/v2/mgo/bson"
@@ -240,16 +240,16 @@ func (user *User) SetApiKey(apiKey string, w http.ResponseWriter) error {
 
 func (user *User) GenerateToken() string {
 	// @TODO: use md5(microtime())
-	return stringHelper.RandomString(32)
+	return helpers.RandomString(32)
 }
 func (user *User) GenerateApiKey() string {
 	// @TODO: check if Token is given
 	// @TODO: use User.Token + md5(microtime())
-	return stringHelper.RandomString(32)
+	return helpers.RandomString(32)
 }
 
 func (user *User) CreatePrivateStorage() {
-	collectionName := stringHelper.GetCappedCollectionNameForApiKey(user.ApiKey)
+	collectionName := helpers.GetCappedCollectionNameForApiKey(user.ApiKey)
 
 	session, err := db.GetConnection()
 	if err != nil {
@@ -266,7 +266,7 @@ func (user *User) CreatePrivateStorage() {
 }
 
 func (user *User) RemovePrivateStorage() {
-	collectionName := stringHelper.GetCappedCollectionNameForApiKey(user.ApiKey)
+	collectionName := helpers.GetCappedCollectionNameForApiKey(user.ApiKey)
 
 	session, err := db.GetConnection()
 	if err != nil {
