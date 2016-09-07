@@ -5,8 +5,8 @@ package config
  */
 const (
 	BaseDir        = ""
-	UserCookieName = "prflr.User.ApiKey"
-	DomainName     = "prflr.loc"
+	UserCookieName = "prflr.auth.cookie"
+	DomainName     = "prflr.org"
 
 	DBName   = "prflr"
 	DBHosts  = "127.0.0.1"

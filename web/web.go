@@ -50,6 +50,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
 	user := &user.User{}
 	if err := user.GetCurrentUser(r); err != nil {
+		//log.Notice(err.Error())
 		// check for Auth Form Submit
 		email := r.PostFormValue("email")
 		pass := r.PostFormValue("password")
@@ -57,6 +58,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		// auth successful?..
 		loginErr := auth(email, pass, w)
 		if loginErr == nil {
+			log.Error(loginErr.Error())
 			http.Redirect(w, r, helpers.GenerateUrl("/"), http.StatusFound)
 		}
 
@@ -150,6 +152,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		loginErr := auth(email, pass, w)
 		if loginErr == nil {
 			http.Redirect(w, r, helpers.GenerateUrl("/"), http.StatusFound)
+		} else {
+			log.Error(loginErr.Error())
 		}
 
 		tplVars["loginErr"] = loginErr
@@ -418,7 +422,7 @@ func recoverPassword(email string) (*user.User, error) {
 
 func auth(email, password string, w http.ResponseWriter) error {
 	if len(email) == 0 || len(password) == 0 {
-		return errors.New("")
+		return errors.New("Empty email or password")
 	}
 
 	_, err := user.Auth(email, password, w)
