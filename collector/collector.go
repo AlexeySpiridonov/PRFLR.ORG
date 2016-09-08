@@ -50,7 +50,7 @@ func saveMessage(msg string) {
 
 	// Couldn't Parse? Wrong Format? Just skip it!!!
 	if err != nil {
-		log.Warning(err.Error(), msg)
+		log.Warning(err.Error())
 		return
 	}
 
