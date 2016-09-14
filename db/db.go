@@ -3,7 +3,7 @@ package db
 import (
 	"PRFLR.ORG/config"
 	"github.com/op/go-logging"
-	"labix.org/v2/mgo"
+	"gopkg.in/mgo.v2"
 )
 
 var log = logging.MustGetLogger("db")
