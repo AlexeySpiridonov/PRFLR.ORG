@@ -48,6 +48,16 @@ func (user *User) GetUserByApiKey(apiKey string) error {
 	return nil
 }
 
+func GetUsers() ( users []User, err error) {
+	session, _ := db.GetConnection()
+	defer session.Close()
+	db := session.DB(config.DBName)
+	dbc := db.C(config.DBUsers)
+	users = make([]User, 0)
+	err = dbc.Find(nil).All(&users)
+	return
+}
+
 func (user *User) GetCurrentUser(r *http.Request) error {
 	// check Cookies first
 	cookie, err := r.Cookie(config.UserCookieName)
@@ -267,7 +277,10 @@ func (user *User) CreatePrivateStorage() {
 
 func (user *User) RemovePrivateStorage() {
 	collectionName := helpers.GetCappedCollectionNameForApiKey(user.ApiKey)
+	RemoveStorage(collectionName)
+}
 
+func RemoveStorage(c string) {
 	session, err := db.GetConnection()
 	if err != nil {
 		log.Error(err.Error())
@@ -276,11 +289,12 @@ func (user *User) RemovePrivateStorage() {
 	defer session.Close()
 
 	// creating capped collection
-	err = session.DB(config.DBName).C(collectionName).DropCollection()
+	err = session.DB(config.DBName).C(c).DropCollection()
 	if err != nil {
 		log.Error(err.Error())
 	}
 }
+
 
 func (user *User) RemovePrivateStorageData() {
 	// remove current

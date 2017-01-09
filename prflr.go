@@ -3,6 +3,9 @@ package main
 import (
 	"PRFLR.ORG/collector"
 	"PRFLR.ORG/web"
+	"PRFLR.ORG/user"
+	"PRFLR.ORG/config"
+	"PRFLR.ORG/db"
 	"github.com/op/go-logging"
 	"github.com/yvasiyarov/gorelic"
 	"os"
@@ -14,6 +17,8 @@ func main() {
 
 	initGoRelic()
 	initLogs()
+
+	recreateDB()
 
 	/* init HTTP Server and Handlers */
 	web.Start()
@@ -58,4 +63,24 @@ func initLogs() {
 
 	log.Info("Logs ok")
 
+}
+
+func recreateDB() {
+	session, err := db.GetConnection()
+	if err != nil {
+		log.Error(err.Error())
+		return
+	}
+	defer session.Close()
+
+	collections, _ := session.DB(config.DBName).CollectionNames()
+	for _, c := range collections {
+		if c!=config.DBUsers {
+			user.RemoveStorage(c)
+		}
+	}
+	users,_ := user.GetUsers()
+	for _, u := range users {
+		u.RemovePrivateStorageData()
+	}
 }
