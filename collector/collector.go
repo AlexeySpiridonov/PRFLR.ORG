@@ -1,9 +1,9 @@
 package collector
 
 import (
-	"PRFLR.ORG/config"
-	"PRFLR.ORG/db"
-	"PRFLR.ORG/timer"
+	"../config"
+	"../db"
+	"../timer"
 	"errors"
 	"github.com/op/go-logging"
 	"net"
@@ -14,8 +14,13 @@ import (
 
 var log = logging.MustGetLogger("collector")
 
+var timers = make(chan string, 1000000)
+
 /* Starting UDP Server */
 func Start() {
+
+	go worker()
+
 	// @TODO: add here UDP aggregator  in  different thread
 	laddr, err := net.ResolveUDPAddr("udp", config.UDPPort)
 	if err != nil {
@@ -38,7 +43,17 @@ func Start() {
 			continue
 		}
 
-		go saveMessage(string(buffer[0:n]))
+		timers <- string(buffer[0:n])
+
+	}
+}
+
+func worker() {
+	for {
+		select {
+			case t := <-timers:
+				saveMessage(t)
+		}
 	}
 }
 

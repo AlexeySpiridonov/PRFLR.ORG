@@ -1,9 +1,9 @@
 package timer
 
 import (
-	"PRFLR.ORG/config"
-	"PRFLR.ORG/db"
-	"PRFLR.ORG/helpers"
+	"../config"
+	"../db"
+	"../helpers"
 	"fmt"
 	"gopkg.in/mgo.v2/bson"
 	"sort"

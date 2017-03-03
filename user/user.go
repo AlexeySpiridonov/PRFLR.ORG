@@ -1,9 +1,9 @@
 package user
 
 import (
-	"PRFLR.ORG/config"
-	"PRFLR.ORG/db"
-	"PRFLR.ORG/helpers"
+	"../config"
+	"../db"
+	"../helpers"
 	"errors"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2/bson"

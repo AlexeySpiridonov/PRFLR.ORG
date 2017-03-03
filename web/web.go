@@ -1,11 +1,11 @@
 package web
 
 import (
-	"PRFLR.ORG/config"
-	"PRFLR.ORG/helpers"
-	"PRFLR.ORG/mailer"
-	"PRFLR.ORG/timer"
-	"PRFLR.ORG/user"
+	"../config"
+	"../helpers"
+	"../mailer"
+	"../timer"
+	"../user"
 	"encoding/json"
 	"errors"
 	"fmt"

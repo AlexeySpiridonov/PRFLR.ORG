@@ -2,7 +2,7 @@
 prod_nodes_list:
   prod:
     name: prflr.org
-    ip:   188.40.91.78
+    ip:   46.101.212.125
     dist: ubuntu
     os:   linux #[linux|darwin|windows]
     arch: amd64 #[amd64|385|arm]

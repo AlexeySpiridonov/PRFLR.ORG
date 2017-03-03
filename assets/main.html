@@ -29,7 +29,7 @@
                     <!-- | <a href="#slow">SlowTop</a> | <a href="#source">Sources</a> | -->
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#settings">Settings</a>
-                    
+
                 </div>
             </td>
         </table>
@@ -39,7 +39,7 @@
             <div id="last" class="profiler_block">
                 <!--<h1>Raw Timers</h1>-->
                 <form action="/last" method="GET" onsubmit="$(this).find('.refresh_button').click();return false">
-                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100">
                         <tr>
                             <td class='r0 f15'></td>
                             <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
@@ -47,7 +47,7 @@
                             <td class="r3"></td>
                             <td class="r4 f18">
                                 Time<br/>&nbsp;
-                                
+
                             </td>
                         </tr>
                         <tr>
@@ -79,7 +79,7 @@
             <!-- STATISTIC -->
             <div id="aggregate" class="profiler_block">
                 <form action="/aggregate" method="GET" onsubmit="$(this).find('.refresh_button').click();return false">
-                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100">
                         <tr>
                             <td class='r0 f15'></td>
                             <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
@@ -96,7 +96,7 @@
                                 <input name="filter" class='cp' value="*/*/*/*" />
                             </td>
                             <td align="left">
-                                Sort By: 
+                                Sort By:
                                 <select style="width:160px;" name="sortby">
                                     <option value="max">Max Time (red)</option>
                                     <option value="avg">Avg Time (green)</option>
@@ -113,7 +113,7 @@
                             <td class='r0'></td>
                             <td align="right">
                                 <div style="padding-right:75px;">
-                                    Group By: 
+                                    Group By:
                                     <select style="width:200px;" name="groupby">
                                         <option value="src,timer">Source + Timer</option>
                                         <option value="src,magic">Source</option>
@@ -138,7 +138,7 @@
             <!-- GRAPH -->
             <div id="graph" class="profiler_block">
                 <form action="/graph" method="GET" onsubmit="$('#refresh_graph_button').click();return false">
-                    <table border="0" cellpadding="0" cellspacing="0" class="t100"> 
+                    <table border="0" cellpadding="0" cellspacing="0" class="t100">
                         <tr>
                             <td class='r0 f15'></td>
                             <td class="r1 f30"><span class="prflrItemHeader" item="src">Source</span> / <span class="prflrItemHeader" item="timer">Timer</span> / <span class="prflrItemHeader" item="info">Info</span> / <span class="prflrItemHeader" item="thrd">Thread</span></td>
@@ -182,7 +182,7 @@
                 <b>Email</b> {{.user.Email}} </br>
                 <b>Password</b> {{.user.Password}}<!-- (<a href="#changePassword" onClick="return changePassword();">change</a>)--></br>
                 <b>ApiKey</b> {{.ApiKey}} <!--(<a href="/resetApiKey" onClick="return resetApiKey();">reset</a>)--></br>
-                <b>Storage:</b> 1 000 000 timers / 200Mb. <br/> - - - To increase your storage please contact us (<a href="email:info@prflr.org">info@prflr.org</a>). This option costs $30 a month.</br>
+                <b>Storage:</b> 100 000 timers / 200Mb. <br/> - - - To increase your storage please contact us (<a href="email:info@prflr.org">info@prflr.org</a>). This option costs $30 a month.</br>
 
                 <br/><br/><br/>
                 <div style="width:50%;border-bottom:1px solid black"></div>
@@ -212,14 +212,14 @@
     </center>
     <br/><br/>
 </center>
-<script type="text/javascript">        
-var inProgress    = false;     
-var lineBarLength = 265;       
-       
-$(document).ready(function(){      
-    start();       
-});        
-         
+<script type="text/javascript">
+var inProgress    = false;
+var lineBarLength = 265;
+
+$(document).ready(function(){
+    start();
+});
+
 </script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"PRFLR.ORG/collector"
-	"PRFLR.ORG/web"
-	"PRFLR.ORG/user"
-	"PRFLR.ORG/config"
-	"PRFLR.ORG/db"
+	"./collector"
+	"./web"
+	"./user"
+	"./config"
+	"./db"
 	"github.com/op/go-logging"
 	"github.com/yvasiyarov/gorelic"
 	"os"

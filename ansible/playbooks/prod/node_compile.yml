@@ -8,16 +8,11 @@
   tasks:
 
   - name: Ensure GoLang libs...
-    shell: go get
-    when: CheckDependencyLibs
-
-  - name: Update Source Code
-    shell: cd {{ GOPATH }}/{{ ProjectPath }} && git pull
-    when: UseGIT
+    shell: "cd {{ ProjectPath }} && go get"
 
   # Build!
   #   please run the following to enable cross-compile feature in your GoLang ENV:
   #   $ sudo cd /usr/local/go/src && GOOS=linux GOARCH=amd64 ./make.bash --no-clean
   - name: Compile for each node...
-    shell: "cd {{ GOPATH }}/{{ ProjectPath }} && export GOPATH={{GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} ./prflr.go"
+    shell: "cd {{ ProjectPath }} && export GOPATH={{GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} {{ ProjectPath }}prflr.go"
     with_dict: "{{ prod_nodes_list }}"
