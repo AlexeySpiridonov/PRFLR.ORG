@@ -1,6 +1,6 @@
 ---
 ProjectName: PRFLR.ORG
-ProjectPath: ~/Dropbox/AppCode/PRFLR.ORG/
+ProjectPath: ../../../
 
 ProjectRepo: git@github.com:AlexeySpiridonov/PRFLR.ORG
 GOPATH: "{{ lookup('env', 'GOPATH')}}"

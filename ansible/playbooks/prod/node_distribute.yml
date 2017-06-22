@@ -10,6 +10,9 @@
   - name: Move compiled binary to Remote Machine GOPATH dir
     copy: src={{ ProjectPath }}/PRFLR_{{inventory_hostname}} dest=/root/go/PRFLR/PRFLR_{{inventory_hostname}} mode=0744
 
+  - name: Move assets dir to Remote Machine GOPATH assets dir
+    synchronize: src={{ ProjectPath }}/assets/ dest=/root/go/PRFLR/assets/
+
   - name: Deliver monit script
     template: src={{ ProjectPath }}/ansible/templates/monit/PRFLR_prod.j2 dest=/etc/monit/conf.d/PRFLR_prod mode=0644
 
@@ -21,6 +24,3 @@
 
   - name: Start monit
     service: name=monit state=started
-
-  - name: Move assets dir to Remote Machine GOPATH assets dir
-    synchronize: src={{ ProjectPath }}/assets/ dest=/root/go/PRFLR/assets/

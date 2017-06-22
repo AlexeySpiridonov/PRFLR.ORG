@@ -2,10 +2,10 @@ package main
 
 import (
 	"./collector"
-	"./web"
-	"./user"
 	"./config"
 	"./db"
+	"./user"
+	"./web"
 	"github.com/op/go-logging"
 	"github.com/yvasiyarov/gorelic"
 	"os"
@@ -35,7 +35,7 @@ func initGoRelic() {
 }
 
 func initLogs() {
-	format := logging.MustStringFormatter("PRFLR> %{module} %{shortfile} > %{level:.7s} > %{message}")
+	format := logging.MustStringFormatter("PRFLR.%{module}.%{shortfile}.%{shortfunc}() > %{level:.7s} : %{message}")
 	//file to stdout
 	log1 := logging.NewLogBackend(os.Stderr, "", 0)
 	file, err := os.OpenFile("/var/log/prflr.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -75,11 +75,11 @@ func recreateDB() {
 
 	collections, _ := session.DB(config.DBName).CollectionNames()
 	for _, c := range collections {
-		if c!=config.DBUsers {
+		if c != config.DBUsers {
 			user.RemoveStorage(c)
 		}
 	}
-	users,_ := user.GetUsers()
+	users, _ := user.GetUsers()
 	for _, u := range users {
 		u.RemovePrivateStorageData()
 	}

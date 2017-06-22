@@ -3,6 +3,7 @@ package collector
 import (
 	"../config"
 	"../db"
+	"../influx"
 	"../timer"
 	"errors"
 	"github.com/op/go-logging"
@@ -75,6 +76,7 @@ func saveMessage(msg string) {
 	if err != nil {
 		log.Error(err.Error())
 	}
+	influx.Save(timer)
 }
 
 func parseStringToTimer(msg string) (*timer.Timer, error) {

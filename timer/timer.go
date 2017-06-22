@@ -289,7 +289,7 @@ func SetApiKey(oldApiKey, newApiKey string) error {
 	return err
 }
 
-func (timer *Timer) Save() error {
+func (timer Timer) Save() error {
 	// @TODO: add validation and Error Handling
 	session, err := db.GetConnection()
 	if err != nil {
