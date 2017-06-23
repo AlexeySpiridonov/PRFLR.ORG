@@ -15,9 +15,6 @@ var log = logging.MustGetLogger("main")
 
 func main() {
 
-	initGoRelic()
-	initLogs()
-
 	recreateDB()
 
 	/* init HTTP Server and Handlers */
@@ -27,14 +24,8 @@ func main() {
 	collector.Start()
 }
 
-func initGoRelic() {
-	agent := gorelic.NewAgent()
-	agent.NewrelicLicense = "6d91ca13798027e532d8a67132d52ba34eba28bb"
-	agent.NewrelicName = "PRFLR"
-	agent.Run()
-}
-
-func initLogs() {
+func init() {
+	//logs
 	format := logging.MustStringFormatter("PRFLR.%{module}.%{shortfile}.%{shortfunc}() > %{level:.7s} : %{message}")
 	//file to stdout
 	log1 := logging.NewLogBackend(os.Stderr, "", 0)
@@ -63,6 +54,11 @@ func initLogs() {
 
 	log.Info("Logs ok")
 
+	//newrelic
+	agent := gorelic.NewAgent()
+	agent.NewrelicLicense = "6d91ca13798027e532d8a67132d52ba34eba28bb"
+	agent.NewrelicName = "PRFLR"
+	agent.Run()
 }
 
 func recreateDB() {

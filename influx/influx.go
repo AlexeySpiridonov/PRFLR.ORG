@@ -17,14 +17,15 @@ var timers = make(chan *timer.Timer, 1000000)
 var i = 0
 
 func init() {
+  log.Info("Stat InfluxDB Client")
   var err error
 	iclient, err = client.NewHTTPClient(client.HTTPConfig{
 		Addr:     "http://localhost:8086",
-		Username: "username",
-		Password: "password",
+		Username: "prflr",
+		Password: "prflr",
 	})
 	if err != nil {
-		log.Panic(err.Error())
+		log.Panic(err)
 	}
 
 	bpCreate()
@@ -34,6 +35,7 @@ func init() {
 }
 
 func bpCreate() {
+  log.Debug("Create batch point")
 	batch, _ = client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  "prflr",
 		Precision: "us", //TODO ???
@@ -41,9 +43,10 @@ func bpCreate() {
 }
 
 func bpClose() {
+  log.Debug("Close batch point")
 	err := iclient.Write(batch)
 	if err != nil {
-		log.Error(err.Error())
+		log.Error(err)
 	}
 }
 
@@ -52,6 +55,7 @@ func Save(t *timer.Timer) {
 }
 
 func worker() {
+  log.Info("Start worker")
 	for {
 		select {
 		case t := <-timers:
@@ -78,12 +82,12 @@ func saveB(t *timer.Timer) {
 	}
 
 	fields := map[string]interface{}{
-		"time": t.Time,
+		"Exec": t.Time,
 	}
 
   pt, err := client.NewPoint(t.Apikey, tags, fields, time.Now())
   if err != nil {
-  		log.Error(err.Error())
+  		log.Error(err)
   }
   batch.AddPoint(pt)
 
