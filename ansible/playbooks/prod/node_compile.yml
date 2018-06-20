@@ -14,5 +14,5 @@
   #   please run the following to enable cross-compile feature in your GoLang ENV:
   #   $ sudo cd /usr/local/go/src && GOOS=linux GOARCH=amd64 ./make.bash --no-clean
   - name: Compile for each node...
-    shell: "cd {{ ProjectPath }} && export GOPATH={{GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} {{ ProjectPath }}prflr.go"
+    shell: "cd {{ ProjectPath }} && export GOPATH={{GOPATH}} && GOOS={{item.value.os}} GOARCH={{item.value.arch}} go build -o PRFLR_{{item.key}} {{ ProjectPath }}/prflr.go"
     with_dict: "{{ prod_nodes_list }}"

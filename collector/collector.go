@@ -3,7 +3,7 @@ package collector
 import (
 	"../config"
 	"../db"
-	"../influx"
+	//"../influx"
 	"../timer"
 	"errors"
 	"github.com/op/go-logging"
@@ -52,8 +52,8 @@ func Start() {
 func worker() {
 	for {
 		select {
-			case t := <-timers:
-				saveMessage(t)
+		case t := <-timers:
+			saveMessage(t)
 		}
 	}
 }
@@ -76,7 +76,7 @@ func saveMessage(msg string) {
 	if err != nil {
 		log.Error(err.Error())
 	}
-	influx.Save(timer)
+	//influx.Save(timer)
 }
 
 func parseStringToTimer(msg string) (*timer.Timer, error) {
