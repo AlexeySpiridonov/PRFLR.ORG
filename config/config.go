@@ -16,8 +16,8 @@ const (
 	UDPPort  = ":4000"
 	HTTPPort = ":8080"
 
-	CappedCollectionMaxByte = 50000000
-	CappedCollectionMaxDocs = 100000
+	CappedCollectionMaxByte = 150000000
+	CappedCollectionMaxDocs = 1000000
 
 	RegisterEmailFrom    = "robot@prflr.org"
 	RegisterEmailTo      = "info@prflr.org"
