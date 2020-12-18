@@ -10,8 +10,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/op/go-logging"
-	"html/template"
 	"gopkg.in/mgo.v2/bson"
+	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -31,7 +31,9 @@ func Start() {
 	http.HandleFunc("/last/", lastHandler)
 	http.HandleFunc("/aggregate/", aggregateHandler)
 	http.HandleFunc("/graph/", graphHandler)
-	http.HandleFunc("/signup/", registerHandler)
+
+	//TODO temporary block
+	//http.HandleFunc("/signup/", registerHandler)
 	http.HandleFunc("/signin/", loginHandler)
 	http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
 	http.HandleFunc("/passwordRecovered/", passwordRecoveredHandler)

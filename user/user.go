@@ -48,7 +48,7 @@ func (user *User) GetUserByApiKey(apiKey string) error {
 	return nil
 }
 
-func GetUsers() ( users []User, err error) {
+func GetUsers() (users []User, err error) {
 	session, _ := db.GetConnection()
 	defer session.Close()
 	db := session.DB(config.DBName)
@@ -161,6 +161,7 @@ func (user *User) saveUserToCookie(w http.ResponseWriter) {
 		86400,
 		false,
 		false,
+		http.SameSiteDefaultMode,
 		raw,
 		[]string{raw},
 	}
@@ -181,6 +182,7 @@ func (user *User) Logout(w http.ResponseWriter) {
 		86400,
 		false,
 		false,
+		http.SameSiteDefaultMode,
 		raw,
 		[]string{raw},
 	}
@@ -288,13 +290,12 @@ func RemoveStorage(c string) {
 	}
 	defer session.Close()
 
-	// creating capped collection
+	//  drop capped collection
 	err = session.DB(config.DBName).C(c).DropCollection()
 	if err != nil {
 		log.Error(err.Error())
 	}
 }
-
 
 func (user *User) RemovePrivateStorageData() {
 	// remove current
