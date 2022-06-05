@@ -4,18 +4,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/op/go-logging"
-	"gopkg.in/mgo.v2/bson"
 	"html/template"
 	"net/http"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/op/go-logging"
+	"gopkg.in/mgo.v2/bson"
 	"prflr.org/config"
 	"prflr.org/helpers"
 	"prflr.org/mailer"
 	"prflr.org/timer"
 	"prflr.org/user"
-	"strconv"
-	"strings"
-	"time"
 )
 
 var log = logging.MustGetLogger("web")
@@ -32,8 +33,7 @@ func Start() {
 	http.HandleFunc("/aggregate/", aggregateHandler)
 	http.HandleFunc("/graph/", graphHandler)
 
-	//TODO temporary block
-	//http.HandleFunc("/signup/", registerHandler)
+	http.HandleFunc("/signup/", registerHandler)
 	http.HandleFunc("/signin/", loginHandler)
 	http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
 	http.HandleFunc("/passwordRecovered/", passwordRecoveredHandler)
