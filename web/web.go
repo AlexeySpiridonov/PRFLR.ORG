@@ -33,7 +33,7 @@ func Start() {
 	http.HandleFunc("/aggregate/", aggregateHandler)
 	http.HandleFunc("/graph/", graphHandler)
 
-	http.HandleFunc("/signup/", registerHandler)
+	//http.HandleFunc("/signup/", registerHandler)
 	http.HandleFunc("/signin/", loginHandler)
 	http.HandleFunc("/forgotPassword/", forgotPasswordHandler)
 	http.HandleFunc("/passwordRecovered/", passwordRecoveredHandler)
