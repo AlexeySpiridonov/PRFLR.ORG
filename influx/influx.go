@@ -1,9 +1,9 @@
 package influx
 
 import (
-	"../timer"
 	"github.com/influxdata/influxdb/client/v2"
 	"github.com/op/go-logging"
+	"prflr.org/timer"
 	"time"
 )
 
@@ -17,8 +17,8 @@ var timers = make(chan *timer.Timer, 1000000)
 var i = 0
 
 func init() {
-  log.Info("Stat InfluxDB Client")
-  var err error
+	log.Info("Stat InfluxDB Client")
+	var err error
 	iclient, err = client.NewHTTPClient(client.HTTPConfig{
 		Addr:     "http://localhost:8086",
 		Username: "prflr",
@@ -30,12 +30,12 @@ func init() {
 
 	bpCreate()
 
-  go worker()
+	go worker()
 
 }
 
 func bpCreate() {
-  log.Debug("Create batch point")
+	log.Debug("Create batch point")
 	batch, _ = client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  "prflr",
 		Precision: "us", //TODO ???
@@ -43,7 +43,7 @@ func bpCreate() {
 }
 
 func bpClose() {
-  log.Debug("Close batch point")
+	log.Debug("Close batch point")
 	err := iclient.Write(batch)
 	if err != nil {
 		log.Error(err)
@@ -55,7 +55,7 @@ func Save(t *timer.Timer) {
 }
 
 func worker() {
-  log.Info("Start worker")
+	log.Info("Start worker")
 	for {
 		select {
 		case t := <-timers:
@@ -85,10 +85,10 @@ func saveB(t *timer.Timer) {
 		"Exec": t.Time,
 	}
 
-  pt, err := client.NewPoint(t.Apikey, tags, fields, time.Now())
-  if err != nil {
-  		log.Error(err)
-  }
-  batch.AddPoint(pt)
+	pt, err := client.NewPoint(t.Apikey, tags, fields, time.Now())
+	if err != nil {
+		log.Error(err)
+	}
+	batch.AddPoint(pt)
 
 }

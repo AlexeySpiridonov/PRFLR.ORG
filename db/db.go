@@ -1,9 +1,9 @@
 package db
 
 import (
-	"../config"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2"
+	"prflr.org/config"
 )
 
 var log = logging.MustGetLogger("db")

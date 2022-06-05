@@ -1,9 +1,9 @@
 package helpers
 
 import (
-	"../config"
 	"crypto/rand"
 	"math/big"
+	"prflr.org/config"
 )
 
 func RandomString(n int) string {

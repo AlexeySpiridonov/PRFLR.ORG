@@ -1,14 +1,14 @@
 package main
 
 import (
-	"./collector"
-	"./config"
-	"./db"
-	"./user"
-	"./web"
 	"github.com/op/go-logging"
 	"github.com/yvasiyarov/gorelic"
 	"os"
+	"prflr.org/collector"
+	"prflr.org/config"
+	"prflr.org/db"
+	"prflr.org/user"
+	"prflr.org/web"
 )
 
 var log = logging.MustGetLogger("main")

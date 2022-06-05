@@ -1,11 +1,6 @@
 package web
 
 import (
-	"../config"
-	"../helpers"
-	"../mailer"
-	"../timer"
-	"../user"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,6 +8,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"html/template"
 	"net/http"
+	"prflr.org/config"
+	"prflr.org/helpers"
+	"prflr.org/mailer"
+	"prflr.org/timer"
+	"prflr.org/user"
 	"strconv"
 	"strings"
 	"time"
@@ -435,17 +435,13 @@ func auth(email, password string, w http.ResponseWriter) error {
 func sendRegistrationEmail(user *user.User) error {
 	msg := "Greetings!\n\nThank you for your decision to make your projects performance even better!\n\n" +
 		"Please find all the service information below:\n\n" +
-
 		"Email: " + user.Email + "\n" +
 		"Pass: " + user.Password + "\n" +
 		"API Key: " + helpers.GetApiIDForApiKey(user.ApiKey) + "\n\n" +
-
 		"Following links are for the SDK Integration into your application:\n\n" +
-
 		"SDK: https://github.com/PRFLR/SDK\n" +
 		"WebPanel: http://prflr.org\n" +
 		"Tutorials: https://github.com/PRFLR/SDK/wiki\n\n" +
-
 		"Good luck in neverending fight for milliseconds!\n" +
 		"PRFLR Team © " + strconv.Itoa(time.Now().Year()) + ", info@prflr.org\n\n" +
 		"Join our G+ Community: http://goo.gl/AqJV4V"
@@ -481,11 +477,8 @@ func sendRegistrationEmail(user *user.User) error {
 
 func sendRecoveryEmail(user *user.User) error {
 	msg := "Greetings!\n\n" +
-
 		"Your Pass: " + user.Password + "\n\n" +
-
 		"Please try to login at: http://prflr.org\n\n" +
-
 		"Good luck in neverending fight for milliseconds!\n" +
 		"PRFLR Team © " + strconv.Itoa(time.Now().Year()) + ", info@prflr.org\n\n" +
 		"Join our G+ Community: http://goo.gl/AqJV4V"

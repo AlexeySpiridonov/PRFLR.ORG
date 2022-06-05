@@ -1,13 +1,13 @@
 package collector
 
 import (
-	"../config"
-	"../db"
-	//"../influx"
-	"../timer"
 	"errors"
 	"github.com/op/go-logging"
 	"net"
+	"prflr.org/config"
+	"prflr.org/db"
+	//"prflr.org/influx"
+	"prflr.org/timer"
 	"strconv"
 	"strings"
 	"time"

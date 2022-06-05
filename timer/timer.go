@@ -1,11 +1,11 @@
 package timer
 
 import (
-	"../config"
-	"../db"
-	"../helpers"
 	"fmt"
 	"gopkg.in/mgo.v2/bson"
+	"prflr.org/config"
+	"prflr.org/db"
+	"prflr.org/helpers"
 	"sort"
 	"time"
 )

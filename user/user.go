@@ -1,13 +1,13 @@
 package user
 
 import (
-	"../config"
-	"../db"
-	"../helpers"
 	"errors"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2/bson"
 	"net/http"
+	"prflr.org/config"
+	"prflr.org/db"
+	"prflr.org/helpers"
 	"time"
 )
 
